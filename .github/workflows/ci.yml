@@ -1,0 +1,32 @@
+name: Continuous integration
+
+on:
+  # Manual dispatch for testing
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: assemble
+  check-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Check code formatting
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: spotlessCheck

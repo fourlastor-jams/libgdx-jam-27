@@ -1,0 +1,31 @@
+name: Distribution Builds
+
+on:
+  # Automatically on every tag starting with v
+  push:
+    tags:
+      - v*
+  # Manual dispatch for testing
+  workflow_dispatch:
+
+jobs:
+  build:
+    env:
+      ITCH_PROJECT: 'fourlastor/gdx-java-base'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: jdno/setup-butler@v1
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: html:dist
+      - name: Deploy 🚀
+        if: startsWith(github.ref, 'refs/tags/')
+        run: butler push html/build/dist $ITCH_PROJECT:html
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
