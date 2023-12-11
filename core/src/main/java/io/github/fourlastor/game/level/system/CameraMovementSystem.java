@@ -7,7 +7,7 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;
 import io.github.fourlastor.game.level.component.BodyComponent;
-import io.github.fourlastor.game.level.component.PlayerComponent;
+import io.github.fourlastor.game.level.component.Turret;
 import javax.inject.Inject;
 
 /**
@@ -16,7 +16,7 @@ import javax.inject.Inject;
 public class CameraMovementSystem extends IteratingSystem {
 
     private static final Family FAMILY_PLAYER =
-            Family.all(PlayerComponent.class, BodyComponent.class).get();
+            Family.all(Turret.class, BodyComponent.class).get();
     private final Camera camera;
     private final ComponentMapper<BodyComponent> bodies;
 

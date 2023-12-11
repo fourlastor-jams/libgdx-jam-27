@@ -16,7 +16,7 @@ public class DesktopLauncher {
         GLFW.glfwGetMonitorContentScale(monitor, scaleX, scaleY);
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setForegroundFPS(60);
-        config.setTitle("Game");
+        config.setTitle("Chain Gun Command");
         config.setHdpiMode(HdpiMode.Pixels);
         setWindowedMode(config, scaleX[0], scaleY[0]);
         new Lwjgl3Application(GdxGame.createGame(), config);

@@ -14,6 +14,14 @@ public class InputStateMachine extends DefaultStateMachine<Entity, InputState> {
         super(entity, initialState);
     }
 
+    public void update(float delta) {
+        if (currentState != null) {
+            currentState.setDelta(delta);
+        }
+
+        update();
+    }
+
     @AssistedFactory
     public interface Factory {
         InputStateMachine create(Entity entity, InputState initialState);
