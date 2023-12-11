@@ -1,16 +1,38 @@
 package io.github.fourlastor.game.level.input.state;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.math.MathUtils;
+import io.github.fourlastor.game.level.EntitiesFactory;
 import io.github.fourlastor.game.level.component.Turret;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
 import javax.inject.Inject;
 
 public class Aiming extends InputState {
+
+    private static final float AIM_SPEED = 30f;
+    private static final float BULLET_INTERVAL = 0.3f;
+
+    private final MessageDispatcher messageDispatcher;
+    private final Engine engine;
+    private final EntitiesFactory entitiesFactory;
+
+    private float fireTimer;
+
     @Inject
-    public Aiming(Mappers mappers) {
+    public Aiming(
+            Mappers mappers, MessageDispatcher messageDispatcher, Engine engine, EntitiesFactory entitiesFactory) {
         super(mappers);
+        this.messageDispatcher = messageDispatcher;
+        this.engine = engine;
+        this.entitiesFactory = entitiesFactory;
+    }
+
+    @Override
+    public void enter(Entity entity) {
+        fireTimer = 0f;
     }
 
     @Override
@@ -30,9 +52,19 @@ public class Aiming extends InputState {
             turret.stateMachine.changeState(turret.idle);
             return;
         }
+        float delta = delta();
+        fireTimer += delta;
+        if (fireTimer >= BULLET_INTERVAL) {
+            engine.addEntity(entitiesFactory.bullet(
+                    turret.angle,
+                    animatedImage.getX() + animatedImage.getWidth() / 2f,
+                    animatedImage.getY() + animatedImage.getHeight() / 2f));
+            fireTimer = 0f;
+        }
 
-        float delta = delta() * direction;
-        float progress = MathUtils.clamp(animatedImage.playTime + delta, 0f, turret.maxLength);
+        float progressDelta = delta * direction;
+        float progress = MathUtils.clamp(animatedImage.playTime + progressDelta, 0f, turret.maxLength);
         animatedImage.setProgress(progress);
+        turret.angle = MathUtils.clamp(turret.angle - progressDelta * AIM_SPEED, 90 - 45f, 90 + 45f);
     }
 }

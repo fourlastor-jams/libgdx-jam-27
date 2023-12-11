@@ -21,6 +21,8 @@ public class Turret implements Component {
     public final int left;
     public final int right;
 
+    public float angle = 90f;
+
     public Turret(
             InputStateMachine stateMachine,
             AnimatedImage animatedImage,
