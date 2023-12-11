@@ -1,7 +1,10 @@
 package io.github.fourlastor.game.level;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import io.github.fourlastor.game.di.ScreenScoped;
+import io.github.fourlastor.harlequin.component.ActorComponent;
 import javax.inject.Inject;
 
 /**
@@ -16,5 +19,11 @@ public class EntitiesFactory {
     @Inject
     public EntitiesFactory(TextureAtlas textureAtlas) {
         this.textureAtlas = textureAtlas;
+    }
+
+    public Entity background() {
+        Entity entity = new Entity();
+        entity.add(new ActorComponent(new Image(textureAtlas.findRegion("background")), Layer.BACKGROUND));
+        return entity;
     }
 }
