@@ -16,10 +16,21 @@ public class Turret implements Component {
 
     public final float maxLength;
 
-    public Turret(InputStateMachine stateMachine, AnimatedImage animatedImage, Aiming aiming, float maxLength) {
+    public final int left;
+    public final int right;
+
+    public Turret(
+            InputStateMachine stateMachine,
+            AnimatedImage animatedImage,
+            Aiming aiming,
+            float maxLength,
+            int left,
+            int right) {
         this.stateMachine = stateMachine;
         this.animatedImage = animatedImage;
         this.aiming = aiming;
         this.maxLength = maxLength;
+        this.left = left;
+        this.right = right;
     }
 }

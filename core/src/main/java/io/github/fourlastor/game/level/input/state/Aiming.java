@@ -2,7 +2,6 @@ package io.github.fourlastor.game.level.input.state;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import io.github.fourlastor.game.level.component.Turret;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
@@ -17,26 +16,20 @@ public class Aiming extends InputState {
     @Override
     public void update(Entity entity) {
         int direction = 0;
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+        Turret turret = turret(entity);
+        if (Gdx.input.isKeyPressed(turret.left)) {
             direction -= 1;
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+        if (Gdx.input.isKeyPressed(turret.right)) {
             direction += 1;
         }
 
-        Turret turret = turret(entity);
         AnimatedImage animatedImage = turret.animatedImage;
-
-        System.out.println(animatedImage.playTime);
 
         if (direction == 0) return;
 
         float delta = delta() * direction;
-        System.out.println(delta);
         float progress = MathUtils.clamp(animatedImage.playTime + delta, 0f, turret.maxLength);
-        System.out.println(
-                "From " + animatedImage.playTime + "to " + progress + " - between 0 and " + turret.maxLength);
-        System.out.println(progress);
         animatedImage.setProgress(progress);
     }
 }
