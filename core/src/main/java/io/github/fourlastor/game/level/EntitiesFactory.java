@@ -13,6 +13,7 @@ import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.component.Turret;
 import io.github.fourlastor.game.level.input.InputStateMachine;
 import io.github.fourlastor.game.level.input.state.Aiming;
+import io.github.fourlastor.game.level.input.state.Idle;
 import io.github.fourlastor.harlequin.animation.FixedFrameAnimation;
 import io.github.fourlastor.harlequin.component.ActorComponent;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
@@ -26,17 +27,21 @@ import javax.inject.Provider;
 @ScreenScoped
 public class EntitiesFactory {
 
-    private static final float SCALE_XY = 1f / 32f;
     private final TextureAtlas textureAtlas;
     private final InputStateMachine.Factory stateMachineFactory;
     private final Provider<Aiming> aimingFactory;
+    private final Provider<Idle> idleFactory;
 
     @Inject
     public EntitiesFactory(
-            TextureAtlas textureAtlas, InputStateMachine.Factory stateMachineFactory, Provider<Aiming> aimingFactory) {
+            TextureAtlas textureAtlas,
+            InputStateMachine.Factory stateMachineFactory,
+            Provider<Aiming> aimingFactory,
+            Provider<Idle> idleFactory) {
         this.textureAtlas = textureAtlas;
         this.stateMachineFactory = stateMachineFactory;
         this.aimingFactory = aimingFactory;
+        this.idleFactory = idleFactory;
     }
 
     public Entity background() {
@@ -64,8 +69,9 @@ public class EntitiesFactory {
             entity.add(new ActorComponent(animatedImage, Layer.BACKGROUND));
             InputStateMachine stateMachine = stateMachineFactory.create(entity, null);
             Aiming aiming = aimingFactory.get();
-            stateMachine.changeState(aiming);
-            entity.add(new Turret(stateMachine, animatedImage, aiming, maxLength, setup.left, setup.right));
+            Idle idle = idleFactory.get();
+            stateMachine.changeState(idle);
+            entity.add(new Turret(stateMachine, animatedImage, aiming, idle, maxLength, setup.left, setup.right));
             entities.add(entity);
         }
 

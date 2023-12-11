@@ -26,7 +26,10 @@ public class Aiming extends InputState {
 
         AnimatedImage animatedImage = turret.animatedImage;
 
-        if (direction == 0) return;
+        if (direction == 0) {
+            turret.stateMachine.changeState(turret.idle);
+            return;
+        }
 
         float delta = delta() * direction;
         float progress = MathUtils.clamp(animatedImage.playTime + delta, 0f, turret.maxLength);
