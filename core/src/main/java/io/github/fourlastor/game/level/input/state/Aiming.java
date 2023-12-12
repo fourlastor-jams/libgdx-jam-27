@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool;
+import io.github.fourlastor.game.level.Config;
 import io.github.fourlastor.game.level.component.Turret;
 import io.github.fourlastor.game.level.event.Message;
 import io.github.fourlastor.game.level.event.SpawnBullet;
@@ -14,7 +15,6 @@ import javax.inject.Inject;
 public class Aiming extends InputState {
 
     private static final float AIM_SPEED = 30f;
-    private static final float BULLET_INTERVAL = 0.3f;
 
     private final MessageDispatcher messageDispatcher;
 
@@ -53,7 +53,7 @@ public class Aiming extends InputState {
         }
         float delta = delta();
         fireTimer += delta;
-        if (fireTimer >= BULLET_INTERVAL) {
+        if (fireTimer >= Config.Turret.SHOOT_INTERVAL) {
             SpawnBullet spawnBullet = spawnBulletPool.obtain();
             spawnBullet.set(
                     animatedImage.getX() + animatedImage.getWidth() / 2f,
@@ -66,6 +66,6 @@ public class Aiming extends InputState {
         float progressDelta = delta * direction;
         float progress = MathUtils.clamp(animatedImage.playTime + progressDelta, 0f, turret.maxLength);
         animatedImage.setProgress(progress);
-        turret.angle = MathUtils.clamp(turret.angle - progressDelta * AIM_SPEED, 90 - 45f, 90 + 45f);
+        turret.angle = MathUtils.clamp(turret.angle - progressDelta * Config.Turret.AIM_SPEED, 90 - 45f, 90 + 45f);
     }
 }

@@ -99,7 +99,7 @@ public class EntitiesFactory {
                         MathUtils.cos(degrees * MathUtils.degreesToRadians),
                         MathUtils.sin(degrees * MathUtils.degreesToRadians))
                 .nor()
-                .scl(5);
+                .scl(Config.Bullet.SPEED);
         image.addAction(Actions.forever(Actions.moveBy(rotationVector.x, rotationVector.y, 0.1f)));
         entity.add(new ActorComponent(image, Layer.TURRETS));
 
