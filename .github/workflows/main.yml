@@ -2,8 +2,8 @@ name: Distribution Builds
 
 on:
   pull_request:
-#    types:
-#      - closed
+    types:
+      - closed
   # Manual dispatch for testing
   workflow_dispatch:
 
@@ -31,7 +31,7 @@ jobs:
           name: build
           path: html/build/dist
           retention-days: 1
-#      - name: Deploy 🚀
-#        run: butler push html/build/dist $ITCH_PROJECT:html
-#        env:
-#          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+      - name: Deploy 🚀
+        run: butler push html/build/dist $ITCH_PROJECT:html
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
