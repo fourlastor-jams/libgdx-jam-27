@@ -90,6 +90,7 @@ public class EntitiesFactory {
         Entity entity = new Entity();
         entity.add(new BulletComponent(degrees));
         Image image = new Image(fireRegion);
+        image.setDebug(true);
         image.setPosition(x, y, Align.bottom);
         image.setOrigin(Align.bottom | Align.center);
         image.setRotation(degrees + 90);
@@ -97,7 +98,8 @@ public class EntitiesFactory {
                 .set(
                         MathUtils.cos(degrees * MathUtils.degreesToRadians),
                         MathUtils.sin(degrees * MathUtils.degreesToRadians))
-                .nor();
+                .nor()
+                .scl(5);
         image.addAction(Actions.forever(Actions.moveBy(rotationVector.x, rotationVector.y, 0.1f)));
         entity.add(new ActorComponent(image, Layer.TURRETS));
 

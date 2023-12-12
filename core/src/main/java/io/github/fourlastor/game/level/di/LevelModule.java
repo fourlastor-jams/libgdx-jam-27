@@ -12,6 +12,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.Layer;
+import io.github.fourlastor.game.level.bullet.BulletRemovalSystem;
 import io.github.fourlastor.game.level.bullet.BulletSpawnSystem;
 import io.github.fourlastor.game.level.input.PlayerInputSystem;
 import io.github.fourlastor.game.level.system.ActorFollowBodySystem;
@@ -33,9 +34,11 @@ public class LevelModule {
             ActorFollowBodySystem actorFollowBodySystem,
             StageSystem stageSystem,
             ClearScreenSystem clearScreenSystem,
-            BulletSpawnSystem bulletSpawnSystem) {
+            BulletSpawnSystem bulletSpawnSystem,
+            BulletRemovalSystem bulletRemovalSystem) {
         Engine engine = new Engine();
         engine.addSystem(bulletSpawnSystem);
+        engine.addSystem(bulletRemovalSystem);
         engine.addSystem(playerInputSystem);
         engine.addSystem(cameraMovementSystem);
         engine.addSystem(actorFollowBodySystem);
