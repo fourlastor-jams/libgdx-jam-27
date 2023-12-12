@@ -1,12 +1,13 @@
 package io.github.fourlastor.game.level.input.state;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.math.MathUtils;
-import io.github.fourlastor.game.level.EntitiesFactory;
+import com.badlogic.gdx.utils.Pool;
 import io.github.fourlastor.game.level.component.Turret;
+import io.github.fourlastor.game.level.event.Message;
+import io.github.fourlastor.game.level.event.SpawnBullet;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
 import javax.inject.Inject;
 
@@ -16,18 +17,16 @@ public class Aiming extends InputState {
     private static final float BULLET_INTERVAL = 0.3f;
 
     private final MessageDispatcher messageDispatcher;
-    private final Engine engine;
-    private final EntitiesFactory entitiesFactory;
+
+    private final Pool<SpawnBullet> spawnBulletPool;
 
     private float fireTimer;
 
     @Inject
-    public Aiming(
-            Mappers mappers, MessageDispatcher messageDispatcher, Engine engine, EntitiesFactory entitiesFactory) {
+    public Aiming(Mappers mappers, MessageDispatcher messageDispatcher, Pool<SpawnBullet> spawnBulletPool) {
         super(mappers);
         this.messageDispatcher = messageDispatcher;
-        this.engine = engine;
-        this.entitiesFactory = entitiesFactory;
+        this.spawnBulletPool = spawnBulletPool;
     }
 
     @Override
@@ -55,10 +54,12 @@ public class Aiming extends InputState {
         float delta = delta();
         fireTimer += delta;
         if (fireTimer >= BULLET_INTERVAL) {
-            engine.addEntity(entitiesFactory.bullet(
-                    turret.angle,
+            SpawnBullet spawnBullet = spawnBulletPool.obtain();
+            spawnBullet.set(
                     animatedImage.getX() + animatedImage.getWidth() / 2f,
-                    animatedImage.getY() + animatedImage.getHeight() / 2f));
+                    animatedImage.getY() + animatedImage.getHeight() / 2f,
+                    turret.angle);
+            messageDispatcher.dispatchMessage(Message.SPAWN_BULLET.ordinal(), spawnBullet);
             fireTimer = 0f;
         }
 
