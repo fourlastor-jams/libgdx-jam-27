@@ -19,10 +19,18 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
       - uses: jdno/setup-butler@v1
-      - name: Build
+      - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
+      - name: Build core
+        run: ./gradlew core:assemble
+      - name: Build html
+        run: ./gradlew html:dist
+      - name: Artifact upload
+        uses: actions/upload-artifact@v3
         with:
-          arguments: html:dist
+          name: build
+          path: html/build/dist
+          retention-days: 1
       - name: Deploy 🚀
         run: butler push html/build/dist $ITCH_PROJECT:html
         env:
