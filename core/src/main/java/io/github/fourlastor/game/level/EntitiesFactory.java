@@ -3,16 +3,21 @@ package io.github.fourlastor.game.level;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.ds.ObjectList;
 import io.github.fourlastor.game.di.ScreenScoped;
+import io.github.fourlastor.game.level.component.BulletComponent;
 import io.github.fourlastor.game.level.component.Turret;
 import io.github.fourlastor.game.level.input.InputStateMachine;
 import io.github.fourlastor.game.level.input.state.Aiming;
+import io.github.fourlastor.game.level.input.state.Idle;
 import io.github.fourlastor.harlequin.animation.FixedFrameAnimation;
 import io.github.fourlastor.harlequin.component.ActorComponent;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
@@ -26,17 +31,23 @@ import javax.inject.Provider;
 @ScreenScoped
 public class EntitiesFactory {
 
-    private static final float SCALE_XY = 1f / 32f;
     private final TextureAtlas textureAtlas;
     private final InputStateMachine.Factory stateMachineFactory;
     private final Provider<Aiming> aimingFactory;
+    private final Provider<Idle> idleFactory;
+    private final TextureAtlas.AtlasRegion fireRegion;
 
     @Inject
     public EntitiesFactory(
-            TextureAtlas textureAtlas, InputStateMachine.Factory stateMachineFactory, Provider<Aiming> aimingFactory) {
+            TextureAtlas textureAtlas,
+            InputStateMachine.Factory stateMachineFactory,
+            Provider<Aiming> aimingFactory,
+            Provider<Idle> idleFactory) {
         this.textureAtlas = textureAtlas;
         this.stateMachineFactory = stateMachineFactory;
         this.aimingFactory = aimingFactory;
+        this.idleFactory = idleFactory;
+        fireRegion = textureAtlas.findRegion("cannon/fire");
     }
 
     public Entity background() {
@@ -64,12 +75,35 @@ public class EntitiesFactory {
             entity.add(new ActorComponent(animatedImage, Layer.BACKGROUND));
             InputStateMachine stateMachine = stateMachineFactory.create(entity, null);
             Aiming aiming = aimingFactory.get();
-            stateMachine.changeState(aiming);
-            entity.add(new Turret(stateMachine, animatedImage, aiming, maxLength, setup.left, setup.right));
+            Idle idle = idleFactory.get();
+            stateMachine.changeState(idle);
+            entity.add(new Turret(stateMachine, animatedImage, aiming, idle, maxLength, setup.left, setup.right));
             entities.add(entity);
         }
 
         return entities;
+    }
+
+    private final Vector2 rotationVector = new Vector2(1, 1);
+
+    public Entity bullet(float degrees, float x, float y) {
+        Entity entity = new Entity();
+        entity.add(new BulletComponent(degrees));
+        Image image = new Image(fireRegion);
+        image.setDebug(true);
+        image.setPosition(x, y, Align.bottom);
+        image.setOrigin(Align.bottom | Align.center);
+        image.setRotation(degrees + 90);
+        rotationVector
+                .set(
+                        MathUtils.cos(degrees * MathUtils.degreesToRadians),
+                        MathUtils.sin(degrees * MathUtils.degreesToRadians))
+                .nor()
+                .scl(Config.Bullet.SPEED);
+        image.addAction(Actions.forever(Actions.moveBy(rotationVector.x, rotationVector.y, 0.1f)));
+        entity.add(new ActorComponent(image, Layer.TURRETS));
+
+        return entity;
     }
 
     private static final float TURRET_PADDING = 14f;
