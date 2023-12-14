@@ -55,10 +55,7 @@ public class Aiming extends InputState {
         fireTimer += delta;
         if (fireTimer >= Config.Turret.SHOOT_INTERVAL) {
             SpawnBullet spawnBullet = spawnBulletPool.obtain();
-            spawnBullet.set(
-                    animatedImage.getX() + animatedImage.getWidth() / 2f,
-                    animatedImage.getY() + animatedImage.getHeight() / 2f,
-                    turret.angle);
+            spawnBullet.set(turret.fireOrigin.x, turret.fireOrigin.y, turret.angle);
             messageDispatcher.dispatchMessage(Message.SPAWN_BULLET.ordinal(), spawnBullet);
             fireTimer = 0f;
         }
