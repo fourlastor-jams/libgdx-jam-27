@@ -47,10 +47,6 @@ public class Aiming extends InputState {
 
         AnimatedImage animatedImage = turret.animatedImage;
 
-        if (direction == 0) {
-            turret.stateMachine.changeState(turret.idle);
-            return;
-        }
         float delta = delta();
         fireTimer += delta;
         if (fireTimer >= Config.Turret.SHOOT_INTERVAL) {

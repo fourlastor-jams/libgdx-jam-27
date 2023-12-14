@@ -82,7 +82,7 @@ public class EntitiesFactory {
             InputStateMachine stateMachine = stateMachineFactory.create(entity, null);
             Aiming aiming = aimingFactory.get();
             Idle idle = idleFactory.get();
-            stateMachine.changeState(idle);
+            stateMachine.changeState(aiming);
             Vector2 fireOrigin =
                     new Vector2(setup.towerPosition).add(setup.turretOffset).add(2, 5);
             entity.add(new Turret(
