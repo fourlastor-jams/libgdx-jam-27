@@ -37,7 +37,7 @@ public class AssetsModule {
         assetManager.setLoader(AnimationNode.Group.class, dragonBonesLoader);
         assetManager.load(PATH_TEXTURE_ATLAS, TextureAtlas.class);
 
-        assetManager.load("fonts/grenade-32.fnt", BitmapFont.class);
+        assetManager.load("fonts/codename-coder-32.fnt", BitmapFont.class);
 
         assetManager.load("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
         assetManager.load("audio/music/612631__szegvari__techno-retro-trance-sample-short-cinematic-120bpm-music-surround.ogg", Music.class);
