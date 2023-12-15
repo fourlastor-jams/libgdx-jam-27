@@ -24,7 +24,9 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.TypingLabel;
+
 import io.github.fourlastor.game.SoundController;
+import io.github.fourlastor.game.route.Router;
 
 import javax.inject.Inject;
 
@@ -37,6 +39,7 @@ public class IntroScreen extends ScreenAdapter {
     private final Viewport viewport;
     private final TextureAtlas textureAtlas;
     private final AssetManager assetManager;
+    private final Router router;
 
     private Array<Image> ground;
     private Array<Image> cityShields;
@@ -54,11 +57,13 @@ public class IntroScreen extends ScreenAdapter {
             InputMultiplexer inputMultiplexer,
             AssetManager assetManager,
             TextureAtlas textureAtlas,
-            SoundController soundController
+            SoundController soundController,
+            Router router
     ) {
         this.inputMultiplexer = inputMultiplexer;
         this.textureAtlas = textureAtlas;
         this.assetManager = assetManager;
+        this.router = router;
 
         viewport = new FitViewport(160f, 90f);
         stage = new Stage(viewport);
@@ -93,7 +98,6 @@ public class IntroScreen extends ScreenAdapter {
         setup();
         startAnimation();
 
-
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(processor);
     }
@@ -119,7 +123,8 @@ public class IntroScreen extends ScreenAdapter {
     }
 
     private void transitionToLevelScreen() {
-        // TODO
+        introMusic.stop();
+        router.goToLevel();
     }
 
     private void setup() { // TODO
@@ -140,7 +145,6 @@ public class IntroScreen extends ScreenAdapter {
         table.add(label).padBottom(Gdx.graphics.getHeight() * .025f);
         table.setFillParent(true);
         stage.addActor(table);
-
 
         ground = new Array<>();
         ground.add(new Image(textureAtlas.findRegion("ground/layer5")));
@@ -163,18 +167,7 @@ public class IntroScreen extends ScreenAdapter {
     }
 
     private void startAnimation() {
-        {/*for (int i = 0; i < ground.size; i++) {
-            float amountY = 66f - 19 * i;
-            float duration = 10f - .2f * i;
-            System.out.println(i + ", name: " + ground.get(i).getName() + ", amountY: " + amountY + ", duration: " + duration);
-            ground.get(i).addAction(
-                    Actions.moveBy(0f, amountY, duration, Interpolation.circleOut)
-            );
-        }*/
-        }
-
         float durationOffset = 5f;
-
         float offset = 30f;
         float delay = 5f;
         ground.get(0).addAction(Actions.sequence(
@@ -218,5 +211,10 @@ public class IntroScreen extends ScreenAdapter {
                     label.restart();
                 })
         ));
+        ground.first().addAction(Actions.sequence(
+                Actions.delay(30f),
+                Actions.run(() -> {
+                    transitionToLevelScreen();
+                })));
     }
 }
