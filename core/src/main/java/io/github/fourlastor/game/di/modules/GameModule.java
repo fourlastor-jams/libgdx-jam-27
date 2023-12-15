@@ -1,14 +1,15 @@
 package io.github.fourlastor.game.di.modules;
 
+import com.github.tommyettinger.random.ChopRandom;
+import com.github.tommyettinger.random.EnhancedRandom;
 import dagger.Module;
 import dagger.Provides;
-import java.util.Random;
 
 @Module
 public class GameModule {
 
     @Provides
-    public Random random() {
-        return new Random();
+    public EnhancedRandom random() {
+        return new ChopRandom();
     }
 }
