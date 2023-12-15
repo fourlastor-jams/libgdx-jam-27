@@ -207,7 +207,7 @@ public class IntroScreen extends ScreenAdapter {
                 Actions.delay(17f),
                 Actions.run(() -> {
                     label.setText("{FADE}{SLOWER}{SHAKE}we're all that's left{WAIT=0.75}\n" +
-                            "and this{WAIT=0.75} is our {COLOR=#a1234d}last {WAIT=0.75}stand.");
+                            "and this{WAIT=0.75} is our {ENDSHAKE}{COLOR=#a1234d}last {WAIT=0.75}stand.");
                     label.restart();
                 })
         ));
