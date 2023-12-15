@@ -11,13 +11,13 @@ import javax.inject.Singleton;
 @Singleton
 public class SoundController {
     private final static float SOUND_VOLUME = 0.45f;
-    private final static float MUSIC_VOLUME = 0.2f;
+    private final static float MUSIC_VOLUME = 0.7f;
 
     @Inject
     public SoundController() {}
 
     public void play(Music music, float volume, boolean repeat) {
-        music.setVolume(Perceptual.amplitudeToPerceptual(volume * MUSIC_VOLUME));
+        music.setVolume(Perceptual.perceptualToAmplitude(volume * MUSIC_VOLUME));
         if (repeat) music.setLooping(true);
         music.play();
     }
