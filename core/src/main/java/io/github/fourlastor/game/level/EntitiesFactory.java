@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -79,16 +80,24 @@ public class EntitiesFactory {
         ObjectList<Entity> entities = new ObjectList<>();
         for (TurretSetup setup : TurretSetup.values()) {
             Entity entity = new Entity();
+            Group actor = new Group();
+            Image towerImage = new Image(textureAtlas.findRegion("cannon/tower-" + setup.ordinal()));
+            actor.addActor(towerImage);
+            actor.setPosition(setup.towerPosition.x, setup.towerPosition.y);
             AnimatedImage animatedImage = new AnimatedImage(new FixedFrameAnimation<>(frameLength, drawables));
-            animatedImage.setPosition(setup.position.x, setup.position.y);
+            animatedImage.setPosition(setup.turretOffset.x, setup.turretOffset.y);
             animatedImage.setProgress(maxLength / 2f);
             animatedImage.setPlaying(false);
-            entity.add(new ActorComponent(animatedImage, Layer.BACKGROUND));
+            actor.addActor(animatedImage);
+            entity.add(new ActorComponent(actor, Layer.TURRETS));
             InputStateMachine stateMachine = stateMachineFactory.create(entity, null);
             Aiming aiming = aimingFactory.get();
             Idle idle = idleFactory.get();
             stateMachine.changeState(idle);
-            entity.add(new Turret(stateMachine, animatedImage, aiming, idle, maxLength, setup.left, setup.right));
+            Vector2 fireOrigin =
+                    new Vector2(setup.towerPosition).add(setup.turretOffset).add(2, 5);
+            entity.add(new Turret(
+                    stateMachine, animatedImage, aiming, idle, maxLength, fireOrigin, setup.left, setup.right));
             entities.add(entity);
         }
 
@@ -106,8 +115,7 @@ public class EntitiesFactory {
         image.setRotation(degrees + 90);
         Vector2 direction = rotationToVector(degrees).scl(Config.Bullet.SPEED);
         image.addAction(Actions.forever(Actions.moveBy(direction.x, direction.y, 0.1f)));
-        entity.add(new ActorComponent(image, Layer.TURRETS));
-
+        entity.add(new ActorComponent(image, Layer.BULLETS));
         return entity;
     }
 
@@ -142,8 +150,6 @@ public class EntitiesFactory {
                 .nor();
     }
 
-    private static final float TURRET_PADDING = 14f;
-
     private enum CityPosition {
         FIRST(new Vector2(12f, 14f)),
         SECOND(new Vector2(54f, 10f)),
@@ -159,19 +165,21 @@ public class EntitiesFactory {
     }
 
     private enum TurretSetup {
-        LEFT(Input.Keys.A, Input.Keys.S, new Vector2(30f - TURRET_PADDING, 10f)),
-        CENTER_LEFT(Input.Keys.D, Input.Keys.F, new Vector2(72f - TURRET_PADDING, 13f)),
-        CENTER_RIGHT(Input.Keys.G, Input.Keys.H, new Vector2(116f - TURRET_PADDING, 10f)),
-        RIGHT(Input.Keys.J, Input.Keys.K, new Vector2(152f - TURRET_PADDING, 16f)),
+        LEFT(Input.Keys.A, Input.Keys.S, new Vector2(19f, 5f), new Vector2(16.5f, 11f)),
+        CENTER_LEFT(Input.Keys.D, Input.Keys.F, new Vector2(65f, 4f), new Vector2(16.5f, 11f)),
+        CENTER_RIGHT(Input.Keys.G, Input.Keys.H, new Vector2(104f, 4f), new Vector2(11.5f, 12f)),
+        RIGHT(Input.Keys.J, Input.Keys.K, new Vector2(143f, 4f), new Vector2(9.5f, 13.5f)),
         ;
         public final int left;
         public final int right;
-        public final Vector2 position;
+        public final Vector2 towerPosition;
+        public final Vector2 turretOffset;
 
-        TurretSetup(int left, int right, Vector2 position) {
+        TurretSetup(int left, int right, Vector2 towerPosition, Vector2 turretOffset) {
             this.left = left;
             this.right = right;
-            this.position = position;
+            this.towerPosition = towerPosition;
+            this.turretOffset = turretOffset;
         }
     }
 

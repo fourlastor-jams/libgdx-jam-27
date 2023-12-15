@@ -3,5 +3,6 @@ package io.github.fourlastor.game.level;
 public enum Layer {
     BACKGROUND,
     TURRETS,
-    ENEMIES
+    BULLETS,
+    ENEMIES,
 }
