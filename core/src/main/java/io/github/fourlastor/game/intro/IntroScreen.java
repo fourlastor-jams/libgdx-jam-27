@@ -10,6 +10,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
@@ -137,7 +138,7 @@ public class IntroScreen extends ScreenAdapter {
 //        BitmapFont font = assetManager.get("fonts/play-16.fnt");
 
         label = new TypingLabel("{FADE}{SLOWER}From the cosmic abyss\n{WAIT=0.75}emerged an [dark yellow 3 black 2 apricot 1]ancient {SHAKEFADE=1.5;1;4.5}terror",
-                new Font("fonts/grenade-64.fnt", "fonts/grenade-64.png").setTextureFilter().scale(.125f, .125f));
+                new Font("fonts/grenade-32.fnt", "fonts/grenade-32.png").setTextureFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest).scale(.25f, .25f));
         label.setAlignment(Align.center);
         Table table = new Table();
         table.add(label).padBottom(Gdx.graphics.getHeight() * .025f);
