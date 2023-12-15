@@ -7,17 +7,20 @@
 	<inherits name="com.badlogic.gdx.controllers.controllers-gwt" />
 	<inherits name="com.badlogic.gdx.ai" />
 	<inherits name="com.badlogic.ashley_gwt" />
+
 	<inherits name="regexodus.regexodus" />
 	<inherits name="com.github.tommyettinger.textratypist" />
 	<inherits name="com.github.tommyettinger.funderby" />
 	<inherits name="com.github.tommyettinger.digital" />
 	<inherits name="com.github.tommyettinger.jdkgdxds" />
+	<inherits name="com.github.tommyettinger.juniper" />
 
 	<inherits name="io.github.fourlastor.GdxGame" />
 	<inherits name="io.github.fourlastor.LdtkLoader" />
 	<inherits name="io.github.fourlastor.Harlequin" />
 	<inherits name="io.github.fourlastor.HarlequinAshley" />
 	<inherits name="io.github.fourlastor.JsonParser" />
+
 	<entry-point class="io.github.fourlastor.game.client.HtmlLauncher" />
 	<set-configuration-property name="xsiframe.failIfScriptTag" value="FALSE"/>
 	<set-configuration-property name="gdx.assetpath" value="../assets" />
