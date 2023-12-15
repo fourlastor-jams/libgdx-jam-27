@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.TypingConfig;
 import com.github.tommyettinger.textra.TypingLabel;
+import io.github.fourlastor.game.SoundController;
 
 import javax.inject.Inject;
 
