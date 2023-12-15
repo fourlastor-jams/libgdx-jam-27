@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -44,11 +46,14 @@ public class IntroScreen extends ScreenAdapter {
 
     private TypingLabel label;
 
+    private Music introMusic;
+
     @Inject
     public IntroScreen(
             InputMultiplexer inputMultiplexer,
             AssetManager assetManager,
-            TextureAtlas textureAtlas
+            TextureAtlas textureAtlas,
+            SoundController soundController
     ) {
         this.inputMultiplexer = inputMultiplexer;
         this.textureAtlas = textureAtlas;
@@ -56,6 +61,9 @@ public class IntroScreen extends ScreenAdapter {
 
         viewport = new FitViewport(160f, 90f);
         stage = new Stage(viewport);
+
+        introMusic = assetManager.get("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
+        soundController.play(introMusic, 1f, false);
     }
 
     private final InputProcessor processor = new InputAdapter() {
@@ -83,6 +91,7 @@ public class IntroScreen extends ScreenAdapter {
     public void show() {
         setup();
         startAnimation();
+
 
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(processor);
@@ -117,27 +126,28 @@ public class IntroScreen extends ScreenAdapter {
         stars.setY(-20f);
         stage.addActor(stars);
 
+        float offset = -30f;
+        planets = new Image(textureAtlas.findRegion("background/planets"));
+        planets.setY(-31f + offset);
+        stage.addActor(planets);
+
         BitmapFont font = assetManager.get("fonts/play-16.fnt");
         label = new TypingLabel("{FADE}{SLOWER}From the cosmic abyss\n{WAIT=0.75}emerged an ancient {SHAKE}terror", new Font(font));
         label.getFont().scale(.5f, .5f);
         label.setAlignment(Align.center);
         Table table = new Table();
-        table.add(label).padBottom(Gdx.graphics.getHeight() * .05f);
+        table.add(label).padBottom(Gdx.graphics.getHeight() * .025f);
         table.setFillParent(true);
         stage.addActor(table);
 
-        planets = new Image(textureAtlas.findRegion("background/planets"));
-        planets.setY(-31f);
-        stage.addActor(planets);
 
         ground = new Array<>();
-        for (int i = 5; i >= 1; i--) {
-            Image image = new Image(textureAtlas.findRegion("ground/layer" + i));
-            image.setName("layer " + (i - 1));
-            ground.add(image);
-        }
+        ground.add(new Image(textureAtlas.findRegion("ground/layer5")));
+        ground.add(new Image(textureAtlas.findRegion("ground/layer4")));
+        ground.add(new Image(textureAtlas.findRegion("ground/layer3")));
+        ground.add(new Image(textureAtlas.findRegion("intro/layer2")));
+        ground.add(new Image(textureAtlas.findRegion("intro/layer1")));
 
-        float offset = 0f;
         ground.get(4).setY(-30f + offset); // foreground
         ground.get(3).setY(-17f + offset);
         ground.get(2).setY(-8f + offset);
@@ -149,11 +159,6 @@ public class IntroScreen extends ScreenAdapter {
 
         for (Image image : ground)
             stage.addActor(image);
-
-        /*
-                cityShields
-        cities
-                turrets*/
     }
 
     private void startAnimation() {
@@ -167,16 +172,34 @@ public class IntroScreen extends ScreenAdapter {
         }*/
         }
 
-        float totalDuration = 13f;
+        float durationOffset = 5f;
 
-        ground.get(0).addAction(Actions.moveBy(0f, 31f, 5f, Interpolation.fastSlow));
-        ground.get(1).addAction(Actions.moveBy(0f, 41f, 7f, Interpolation.fastSlow));
-        ground.get(2).addAction(Actions.moveBy(0f, 49f, 9f, Interpolation.fastSlow));
-        ground.get(3).addAction(Actions.moveBy(0f, 58f, 11f, Interpolation.fastSlow));
-        ground.get(4).addAction(Actions.moveBy(0f, 70f, 13f, Interpolation.fastSlow));
+        float offset = 30f;
+        float delay = 5f;
+        ground.get(0).addAction(Actions.sequence(
+                Actions.delay(delay),
+                Actions.moveBy(0f, 31f + offset, 5f + durationOffset, Interpolation.fastSlow)
+        ));
 
-        planets.addAction(Actions.moveBy(0f, 5f, 9f, Interpolation.fastSlow));
-        stars.addAction(Actions.moveBy(0f, 2f, 9f, Interpolation.fastSlow));
+        ground.get(1).addAction(Actions.sequence(
+                Actions.delay(delay),
+                Actions.moveBy(0f, 41f + offset, 7f + durationOffset, Interpolation.fastSlow))
+        );
+        ground.get(2).addAction(Actions.sequence(
+                Actions.delay(delay),
+                Actions.moveBy(0f, 49f + offset, 9f + durationOffset, Interpolation.fastSlow))
+        );
+        ground.get(3).addAction(Actions.sequence(
+                Actions.delay(delay),
+                Actions.moveBy(0f, 58f + offset, 11f + durationOffset, Interpolation.fastSlow))
+        );
+        ground.get(4).addAction(Actions.sequence(
+                Actions.delay(delay),
+                Actions.moveBy(0f, 70f + offset, 13f + durationOffset, Interpolation.fastSlow))
+        );
+
+        planets.addAction(Actions.moveBy(0f, 5f + offset, 13f + durationOffset, Interpolation.fastSlow));
+        stars.addAction(Actions.moveBy(0f, 2f + offset, 13f + durationOffset, Interpolation.fastSlow));
 
         label.addAction(Actions.sequence(
                 Actions.delay(8f),
@@ -184,15 +207,13 @@ public class IntroScreen extends ScreenAdapter {
                     label.setText("{FADE}{SLOWER}Our world was forcibly reshaped\n in their image. " +
                             "{WAIT=0.75}Abolishing sapient life.");
                     label.restart();
-                }),
-                Actions.delay(2f),
-                Actions.moveTo(label.getX(), Gdx.graphics.getHeight() * .5f, 2f)
+                })
         ));
         label.addAction(Actions.sequence(
-                Actions.delay(16f),
+                Actions.delay(17f),
                 Actions.run(() -> {
-                    label.setText("{FADE}{SLOWER}we're all that's left{WAIT=0.75}\n" +
-                            "and this is our last stand.");
+                    label.setText("{FADE}{SLOWER}{SHAKE}we're all that's left{WAIT=0.75}\n" +
+                            "and this{WAIT=0.75} is our last {WAIT=0.75}stand.");
                     label.restart();
                 })
         ));
