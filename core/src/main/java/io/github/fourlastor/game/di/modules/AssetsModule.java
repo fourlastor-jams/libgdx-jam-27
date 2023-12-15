@@ -36,7 +36,7 @@ public class AssetsModule {
         assetManager.setLoader(AnimationNode.Group.class, dragonBonesLoader);
         assetManager.load(PATH_TEXTURE_ATLAS, TextureAtlas.class);
 
-        assetManager.load("fonts/play-16.fnt", BitmapFont.class);
+        assetManager.load("fonts/grenade-64.fnt", BitmapFont.class);
 
         assetManager.finishLoading();
         return assetManager;

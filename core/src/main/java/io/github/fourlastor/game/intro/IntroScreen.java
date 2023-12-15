@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.textra.Font;
+import com.github.tommyettinger.textra.TypingConfig;
 import com.github.tommyettinger.textra.TypingLabel;
 
 import javax.inject.Inject;
@@ -56,6 +57,8 @@ public class IntroScreen extends ScreenAdapter {
 
         viewport = new FitViewport(160f, 90f);
         stage = new Stage(viewport);
+
+        TypingConfig.registerEffect("SHAKEFADE", ShakeFadeEffect::new);
     }
 
     private final InputProcessor processor = new InputAdapter() {
@@ -117,9 +120,10 @@ public class IntroScreen extends ScreenAdapter {
         stars.setY(-20f);
         stage.addActor(stars);
 
-        BitmapFont font = assetManager.get("fonts/play-16.fnt");
-        label = new TypingLabel("{FADE}{SLOWER}From the cosmic abyss\n{WAIT=0.75}emerged an ancient {SHAKE}terror", new Font(font));
-        label.getFont().scale(.5f, .5f);
+//        BitmapFont font = assetManager.get("fonts/grenade-64.fnt");
+
+        label = new TypingLabel("{FADE}{SLOWER}From the cosmic abyss\n{WAIT=0.75}emerged an [dark yellow 3 black 2 apricot 1]ancient {SHAKEFADE=1.5;1;4.5}terror",
+                new Font("fonts/grenade-64.fnt", "fonts/grenade-64.png").setTextureFilter().scale(.125f, .125f));
         label.setAlignment(Align.center);
         Table table = new Table();
         table.add(label).padBottom(Gdx.graphics.getHeight() * .05f);
@@ -181,8 +185,8 @@ public class IntroScreen extends ScreenAdapter {
         label.addAction(Actions.sequence(
                 Actions.delay(8f),
                 Actions.run(() -> {
-                    label.setText("{FADE}{SLOWER}Our world was forcibly reshaped\n in their image. " +
-                            "{WAIT=0.75}Abolishing sapient life.");
+                    label.setText("{FADE}{SLOWER}Our world was forcibly reshaped\n in [dark yellow 3 black 2 apricot 1]their image[]. " +
+                            "{WAIT=0.75}{HANG}Abolishing{ENDHANG} sapient life.");
                     label.restart();
                 }),
                 Actions.delay(2f),
@@ -192,7 +196,7 @@ public class IntroScreen extends ScreenAdapter {
                 Actions.delay(16f),
                 Actions.run(() -> {
                     label.setText("{FADE}{SLOWER}we're all that's left{WAIT=0.75}\n" +
-                            "and this is our last stand.");
+                            "and this is our [dark dull red]last stand[].");
                     label.restart();
                 })
         ));
