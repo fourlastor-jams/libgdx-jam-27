@@ -138,7 +138,7 @@ public class IntroScreen extends ScreenAdapter {
         stage.addActor(planets);
 
         BitmapFont font = assetManager.get("fonts/play-16.fnt");
-        label = new TypingLabel("{FADE}{SLOWER}From the cosmic abyss\n{WAIT=0.75}emerged an ancient {SHAKE}terror", new Font(font));
+        label = new TypingLabel("{FADE}{SLOWER}From the cosmic abyss\n{WAIT=0.75}emerged an ancient {COLOR=#944e87}{SHAKE}terror", new Font(font));
         label.getFont().scale(.5f, .5f);
         label.setAlignment(Align.center);
         Table table = new Table();
@@ -198,7 +198,7 @@ public class IntroScreen extends ScreenAdapter {
         label.addAction(Actions.sequence(
                 Actions.delay(8f),
                 Actions.run(() -> {
-                    label.setText("{FADE}{SLOWER}Our world was forcibly reshaped\n in their image. " +
+                    label.setText("{FADE}{SLOWER}Our world was forcibly reshaped\n in {COLOR=#ebe5ab}their image{CLEARCOLOR}. " +
                             "{WAIT=0.75}Abolishing sapient life.");
                     label.restart();
                 })
@@ -207,7 +207,7 @@ public class IntroScreen extends ScreenAdapter {
                 Actions.delay(17f),
                 Actions.run(() -> {
                     label.setText("{FADE}{SLOWER}{SHAKE}we're all that's left{WAIT=0.75}\n" +
-                            "and this{WAIT=0.75} is our last {WAIT=0.75}stand.");
+                            "and this{WAIT=0.75} is our {COLOR=#a1234d}last {WAIT=0.75}stand.");
                     label.restart();
                 })
         ));
