@@ -1,9 +1,13 @@
 package io.github.fourlastor.game.di.modules;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.JsonReader;
+import com.github.tommyettinger.textra.Font;
+
 import dagger.Module;
 import dagger.Provides;
 import io.github.fourlastor.harlequin.animation.AnimationNode;
@@ -31,6 +35,9 @@ public class AssetsModule {
         assetManager.setLoader(LdtkMapData.class, ldtkLoader);
         assetManager.setLoader(AnimationNode.Group.class, dragonBonesLoader);
         assetManager.load(PATH_TEXTURE_ATLAS, TextureAtlas.class);
+
+        assetManager.load("fonts/play-16.fnt", BitmapFont.class);
+
         assetManager.finishLoading();
         return assetManager;
     }
