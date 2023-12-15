@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -112,18 +113,21 @@ public class IntroScreen extends ScreenAdapter {
     }
 
     private void setup() { // TODO
-        BitmapFont font = assetManager.get("fonts/play-16.fnt");
-        label = new TypingLabel("lorem ipsum", new Font(font));
-        Table table = new Table();
-        table.add(label);
-        table.setFillParent(true);
-        stage.addActor(table);
-
         stars = new Image(textureAtlas.findRegion("background/stars"));
         stars.setY(-20f);
         stage.addActor(stars);
+
+        BitmapFont font = assetManager.get("fonts/play-16.fnt");
+        label = new TypingLabel("{FADE}{SLOWER}From the cosmic abyss\n{WAIT=0.75}emerged an ancient {SHAKE}terror", new Font(font));
+        label.getFont().scale(.5f, .5f);
+        label.setAlignment(Align.center);
+        Table table = new Table();
+        table.add(label).padBottom(Gdx.graphics.getHeight() * .05f);
+        table.setFillParent(true);
+        stage.addActor(table);
+
         planets = new Image(textureAtlas.findRegion("background/planets"));
-        planets.setY(-30f);
+        planets.setY(-31f);
         stage.addActor(planets);
 
         ground = new Array<>();
@@ -133,11 +137,12 @@ public class IntroScreen extends ScreenAdapter {
             ground.add(image);
         }
 
-        ground.get(4).setY(-30f); // foreground
-        ground.get(3).setY(-17f);
-        ground.get(2).setY(-8f);
-        ground.get(1).setY(0f);
-        ground.get(0).setY(10f); // background
+        float offset = 0f;
+        ground.get(4).setY(-30f + offset); // foreground
+        ground.get(3).setY(-17f + offset);
+        ground.get(2).setY(-8f + offset);
+        ground.get(1).setY(0f + offset);
+        ground.get(0).setY(10f + offset); // background
 
         for (Image layer : ground)
             layer.moveBy(0f, -66f);
@@ -152,7 +157,7 @@ public class IntroScreen extends ScreenAdapter {
     }
 
     private void startAnimation() {
-        /*for (int i = 0; i < ground.size; i++) {
+        {/*for (int i = 0; i < ground.size; i++) {
             float amountY = 66f - 19 * i;
             float duration = 10f - .2f * i;
             System.out.println(i + ", name: " + ground.get(i).getName() + ", amountY: " + amountY + ", duration: " + duration);
@@ -160,6 +165,7 @@ public class IntroScreen extends ScreenAdapter {
                     Actions.moveBy(0f, amountY, duration, Interpolation.circleOut)
             );
         }*/
+        }
 
         float totalDuration = 13f;
 
@@ -171,5 +177,24 @@ public class IntroScreen extends ScreenAdapter {
 
         planets.addAction(Actions.moveBy(0f, 5f, 9f, Interpolation.fastSlow));
         stars.addAction(Actions.moveBy(0f, 2f, 9f, Interpolation.fastSlow));
+
+        label.addAction(Actions.sequence(
+                Actions.delay(8f),
+                Actions.run(() -> {
+                    label.setText("{FADE}{SLOWER}Our world was forcibly reshaped\n in their image. " +
+                            "{WAIT=0.75}Abolishing sapient life.");
+                    label.restart();
+                }),
+                Actions.delay(2f),
+                Actions.moveTo(label.getX(), Gdx.graphics.getHeight() * .5f, 2f)
+        ));
+        label.addAction(Actions.sequence(
+                Actions.delay(16f),
+                Actions.run(() -> {
+                    label.setText("{FADE}{SLOWER}we're all that's left{WAIT=0.75}\n" +
+                            "and this is our last stand.");
+                    label.restart();
+                })
+        ));
     }
 }
