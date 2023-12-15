@@ -114,7 +114,6 @@ public class IntroScreen extends ScreenAdapter {
     private void setup() { // TODO
         BitmapFont font = assetManager.get("fonts/play-16.fnt");
         label = new TypingLabel("lorem ipsum", new Font(font));
-        label.getFont().scale(.5f, .5f);
         Table table = new Table();
         table.add(label);
         table.setFillParent(true);
