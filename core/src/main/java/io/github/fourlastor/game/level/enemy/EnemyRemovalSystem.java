@@ -7,9 +7,7 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import io.github.fourlastor.game.level.component.CityComponent;
 import io.github.fourlastor.game.level.component.EnemyComponent;
 import io.github.fourlastor.game.level.component.PositionComponent;
@@ -31,7 +29,6 @@ public class EnemyRemovalSystem extends IteratingSystem {
     private final ComponentMapper<PositionComponent> positions;
     private final ComponentMapper<EnemyComponent> enemies;
     private final MessageDispatcher messageDispatcher;
-    private final Rectangle stageArea;
     private ImmutableArray<Entity> cityEntities;
     private ImmutableArray<Entity> towerEntities;
 
@@ -40,14 +37,12 @@ public class EnemyRemovalSystem extends IteratingSystem {
             ComponentMapper<TargetComponent> targets,
             ComponentMapper<PositionComponent> positions,
             ComponentMapper<EnemyComponent> enemies,
-            MessageDispatcher messageDispatcher,
-            Stage stage) {
+            MessageDispatcher messageDispatcher) {
         super(FAMILY);
         this.targets = targets;
         this.positions = positions;
         this.enemies = enemies;
         this.messageDispatcher = messageDispatcher;
-        this.stageArea = new Rectangle(0, 0, stage.getWidth(), stage.getHeight());
     }
 
     @Override
