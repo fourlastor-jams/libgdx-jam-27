@@ -124,6 +124,7 @@ dependencies {
     sources(libs.tommyettinger.funderby)
     sources(libs.tommyettinger.digital)
     sources(libs.tommyettinger.jdkgdxds)
+    sources(libs.tommyettinger.juniper)
     sources(libs.tommyettinger.regexodus)
     sources(libs.tommyettinger.textratypist)
 }

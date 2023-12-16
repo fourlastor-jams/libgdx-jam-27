@@ -18,6 +18,7 @@ perceptual = "1.0.0"
 tommyettinger-funderby = "0.1.1"
 tommyettinger-digital = "0.4.5"
 tommyettinger-jdkgdxds = "1.4.5"
+tommyettinger-juniper = "0.5.0"
 tommyettinger-regexodus = "0.1.15"
 tommyettinger-textratypist = "0.10.0"
 [libraries]
@@ -45,6 +46,7 @@ perceptual = { module = "io.github.fourlastor.gdx:perceptual", version.ref = "pe
 tommyettinger-funderby = { module = "com.github.tommyettinger:funderby", version.ref = "tommyettinger-funderby"}
 tommyettinger-digital = { module = "com.github.tommyettinger:digital", version.ref = "tommyettinger-digital"}
 tommyettinger-jdkgdxds = { module = "com.github.tommyettinger:jdkgdxds", version.ref = "tommyettinger-jdkgdxds"}
+tommyettinger-juniper = { module = "com.github.tommyettinger:juniper", version.ref = "tommyettinger-juniper"}
 tommyettinger-regexodus = { module = "com.github.tommyettinger:regexodus", version.ref = "tommyettinger-regexodus" }
 tommyettinger-textratypist = { module = "com.github.tommyettinger:textratypist", version.ref = "tommyettinger-textratypist" }
 [plugins]

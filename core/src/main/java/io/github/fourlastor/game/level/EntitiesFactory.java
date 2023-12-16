@@ -3,9 +3,12 @@ package io.github.fourlastor.game.level;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -13,8 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.ds.ObjectList;
+import com.github.tommyettinger.random.EnhancedRandom;
 import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.component.BulletComponent;
+import io.github.fourlastor.game.level.component.CityComponent;
+import io.github.fourlastor.game.level.component.EnemyComponent;
+import io.github.fourlastor.game.level.component.MovementComponent;
+import io.github.fourlastor.game.level.component.PositionComponent;
 import io.github.fourlastor.game.level.component.Turret;
 import io.github.fourlastor.game.level.input.InputStateMachine;
 import io.github.fourlastor.game.level.input.state.Aiming;
@@ -37,18 +45,24 @@ public class EntitiesFactory {
     private final Provider<Aiming> aimingFactory;
     private final Provider<Idle> idleFactory;
     private final TextureAtlas.AtlasRegion fireRegion;
+    private final EnhancedRandom random;
+    private Vector2 ceiling;
 
     @Inject
     public EntitiesFactory(
             TextureAtlas textureAtlas,
             InputStateMachine.Factory stateMachineFactory,
             Provider<Aiming> aimingFactory,
-            Provider<Idle> idleFactory) {
+            Provider<Idle> idleFactory,
+            EnhancedRandom random,
+            Stage stage) {
         this.textureAtlas = textureAtlas;
         this.stateMachineFactory = stateMachineFactory;
         this.aimingFactory = aimingFactory;
         this.idleFactory = idleFactory;
         fireRegion = textureAtlas.findRegion("cannon/fire");
+        this.random = random;
+        ceiling = new Vector2(-2000, stage.getHeight());
     }
 
     public Entity background() {
@@ -95,24 +109,84 @@ public class EntitiesFactory {
 
     private final Vector2 rotationVector = new Vector2(1, 1);
 
+    public List<Entity> cities() {
+        ObjectList<Entity> entities = new ObjectList<>(CitySetup.values().length);
+        for (CitySetup setup : CitySetup.values()) {
+            Entity entity = new Entity();
+            Image image = new Image(textureAtlas.findRegion("cities/" + setup.image));
+            image.setPosition(setup.position.x, setup.position.y);
+            entity.add(new ActorComponent(image, Layer.CITIES));
+            Rectangle area = new Rectangle(setup.center.x - 1, setup.center.y - 1, 5, 5);
+            entity.add(new CityComponent(area));
+            entities.add(entity);
+        }
+        return entities;
+    }
+
     public Entity bullet(float degrees, float x, float y) {
         Entity entity = new Entity();
         entity.add(new BulletComponent(degrees));
         Image image = new Image(fireRegion);
-        image.setDebug(true);
         image.setPosition(x, y, Align.bottom);
         image.setOrigin(Align.bottom | Align.center);
         image.setRotation(degrees + 90);
-        rotationVector
+        Vector2 direction = rotationToVector(degrees).scl(Config.Bullet.SPEED);
+        image.addAction(Actions.forever(Actions.moveBy(direction.x, direction.y, 0.1f)));
+        entity.add(new ActorComponent(image, Layer.BULLETS));
+        return entity;
+    }
+
+    public Entity enemy() {
+        Entity entity = new Entity();
+        EnemySetup enemySetup = random.randomElement(EnemySetup.values());
+        Vector2 direction = rotationToVector(enemySetup.angle);
+        float moveX = direction.x;
+        float moveY = direction.y;
+        entity.add(new MovementComponent(new Vector2(moveX, moveY), 0.01f));
+        Vector2 cityPos = random.randomElement(CitySetup.values()).center;
+        // invert direction for intersection
+        direction.scl(-1);
+        float distance = Intersector.intersectRayRay(cityPos, direction, ceiling, Vector2.X);
+        direction.scl(distance).add(cityPos);
+        Image image = new Image(textureAtlas.findRegion("enemies/" + enemySetup.image));
+        boolean movingRight = moveX > 0;
+        float headX = 0f;
+        if (movingRight) {
+            headX = image.getWidth();
+            // the "head" of the enemy is on the right corner of the image
+        }
+        direction.add(-headX, 0);
+        image.setPosition(direction.x, direction.y);
+        entity.add(new ActorComponent(image, Layer.ENEMIES));
+        entity.add(new PositionComponent(new Vector2(direction)));
+        entity.add(new EnemyComponent(headX));
+        return entity;
+    }
+
+    private Vector2 rotationToVector(float degrees) {
+        return rotationVector
                 .set(
                         MathUtils.cos(degrees * MathUtils.degreesToRadians),
                         MathUtils.sin(degrees * MathUtils.degreesToRadians))
-                .nor()
-                .scl(Config.Bullet.SPEED);
-        image.addAction(Actions.forever(Actions.moveBy(rotationVector.x, rotationVector.y, 0.1f)));
-        entity.add(new ActorComponent(image, Layer.BULLETS));
+                .nor();
+    }
 
-        return entity;
+    private enum CitySetup {
+        FIRST(new Vector2(10f, 5f), new Vector2(3f, 3f), "city-0"),
+        SECOND(new Vector2(58f, 4f), new Vector2(50f, 2f), "city-1"),
+        THIRD(new Vector2(98f, 4f), new Vector2(90f, 2f), "city-0"),
+        FOURTH(new Vector2(134f, 2f), new Vector2(127f, 0f), "city-1"),
+        ;
+
+        public final Vector2 center;
+        public final Vector2 position;
+        public final String image;
+
+        CitySetup(Vector2 center, Vector2 position, String image) {
+            this.center = center;
+            this.position = position;
+            this.image = image;
+        }
     }
 
     private enum TurretSetup {
@@ -131,6 +205,30 @@ public class EntitiesFactory {
             this.right = right;
             this.towerPosition = towerPosition;
             this.turretOffset = turretOffset;
+        }
+    }
+
+    private enum EnemySetup {
+        //        ENEMY_200("enemy-200", 200f),
+        ENEMY_210("enemy-210", 210f),
+        ENEMY_225("enemy-225", 225f),
+        ENEMY_240("enemy-240", 240f),
+        ENEMY_250("enemy-250", 250f),
+        ENEMY_255("enemy-255", 255f),
+        ENEMY_270("enemy-270", 270f),
+        ENEMY_285("enemy-285", 285f),
+        ENEMY_290("enemy-290", 290f),
+        ENEMY_300("enemy-300", 300f),
+        ENEMY_315("enemy-315", 315f),
+        ENEMY_330("enemy-330", 330f),
+    //        ENEMY_340("enemy-340", 340f),
+    ;
+        public final String image;
+        public final float angle;
+
+        EnemySetup(String image, float angle) {
+            this.image = image;
+            this.angle = angle;
         }
     }
 }
