@@ -10,7 +10,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
@@ -26,12 +25,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.TypingLabel;
 import io.github.fourlastor.game.SoundController;
+import io.github.fourlastor.game.level.Config;
 import io.github.fourlastor.game.route.Router;
 import javax.inject.Inject;
 
 public class IntroScreen extends ScreenAdapter {
-
-    public static Color CLEAR_COLOR = new Color(0.071f, 0.024f, 0.071f, 1f);
 
     private final InputMultiplexer inputMultiplexer;
     private final Stage stage;
@@ -119,7 +117,7 @@ public class IntroScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(CLEAR_COLOR, true);
+        ScreenUtils.clear(Config.Screen.CLEAR_COLOR, true);
 
         stage.act(delta);
         stage.draw();
