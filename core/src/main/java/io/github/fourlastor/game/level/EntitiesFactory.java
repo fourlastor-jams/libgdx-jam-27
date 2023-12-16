@@ -3,6 +3,7 @@ package io.github.fourlastor.game.level;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -18,6 +19,10 @@ import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
 import io.github.fourlastor.game.di.ScreenScoped;
+import io.github.fourlastor.game.level.city.CityStateMachine;
+import io.github.fourlastor.game.level.city.state.Destroyed;
+import io.github.fourlastor.game.level.city.state.ShieldDown;
+import io.github.fourlastor.game.level.city.state.ShieldUp;
 import io.github.fourlastor.game.level.component.BulletComponent;
 import io.github.fourlastor.game.level.component.CityComponent;
 import io.github.fourlastor.game.level.component.EnemyComponent;
@@ -41,26 +46,38 @@ import javax.inject.Provider;
 public class EntitiesFactory {
 
     private final TextureAtlas textureAtlas;
-    private final InputStateMachine.Factory stateMachineFactory;
+    private final InputStateMachine.Factory inputStateMachineFactory;
+    private final CityStateMachine.Factory cityStateMachineFactory;
     private final Provider<Aiming> aimingFactory;
     private final Provider<Idle> idleFactory;
+    private final Provider<ShieldUp> shieldUpFactory;
+    private final Provider<ShieldDown> shieldDownFactory;
+    private final Provider<Destroyed> destroyedFactory;
     private final TextureAtlas.AtlasRegion fireRegion;
     private final EnhancedRandom random;
-    private Vector2 ceiling;
+    private final Vector2 ceiling;
 
     @Inject
     public EntitiesFactory(
             TextureAtlas textureAtlas,
-            InputStateMachine.Factory stateMachineFactory,
+            InputStateMachine.Factory inputStateMachineFactory,
+            CityStateMachine.Factory cityStateMachineFactory,
             Provider<Aiming> aimingFactory,
             Provider<Idle> idleFactory,
+            Provider<ShieldUp> shieldUpFactory,
+            Provider<ShieldDown> shieldDownFactory,
+            Provider<Destroyed> destroyedFactory,
             EnhancedRandom random,
             Stage stage) {
         this.textureAtlas = textureAtlas;
-        this.stateMachineFactory = stateMachineFactory;
+        this.inputStateMachineFactory = inputStateMachineFactory;
+        this.cityStateMachineFactory = cityStateMachineFactory;
         this.aimingFactory = aimingFactory;
         this.idleFactory = idleFactory;
         fireRegion = textureAtlas.findRegion("cannon/fire");
+        this.shieldUpFactory = shieldUpFactory;
+        this.shieldDownFactory = shieldDownFactory;
+        this.destroyedFactory = destroyedFactory;
         this.random = random;
         ceiling = new Vector2(-2000, stage.getHeight());
     }
@@ -93,7 +110,7 @@ public class EntitiesFactory {
             animatedImage.setPlaying(false);
             actor.addActor(animatedImage);
             entity.add(new ActorComponent(actor, Layer.TURRETS));
-            InputStateMachine stateMachine = stateMachineFactory.create(entity, null);
+            InputStateMachine stateMachine = inputStateMachineFactory.create(entity, null);
             Aiming aiming = aimingFactory.get();
             Idle idle = idleFactory.get();
             stateMachine.changeState(idle);
@@ -113,11 +130,38 @@ public class EntitiesFactory {
         ObjectList<Entity> entities = new ObjectList<>(CitySetup.values().length);
         for (CitySetup setup : CitySetup.values()) {
             Entity entity = new Entity();
-            Image image = new Image(textureAtlas.findRegion("cities/" + setup.image));
-            image.setPosition(setup.position.x, setup.position.y);
-            entity.add(new ActorComponent(image, Layer.CITIES));
+            Group group = new Group();
+            Image cityImage = new Image(textureAtlas.findRegion("cities/" + setup.image));
+            Image shieldImage = new Image(textureAtlas.findRegion("cities/shield"));
+            Image destroyedImage = new Image(textureAtlas.findRegion("cities/" + setup.destroyedImage));
+            destroyedImage.setVisible(false);
+            destroyedImage.setPosition(setup.destroyedPosition.x, setup.destroyedPosition.y);
+            shieldImage.setOrigin(Align.top);
+            shieldImage.setScale(1f, 0f);
+            shieldImage.addAction(Actions.sequence(
+                    Actions.delay(random.nextFloat(0.8f)), Actions.scaleTo(1f, 1f, 0.6f, Interpolation.exp10)));
+            shieldImage.setPosition(setup.shieldPosition.x, setup.shieldPosition.y);
+            group.setPosition(setup.position.x, setup.position.y);
+            group.addActor(cityImage);
+            group.addActor(destroyedImage);
+            group.addActor(shieldImage);
+            entity.add(new ActorComponent(group, Layer.CITIES));
             Rectangle area = new Rectangle(setup.center.x - 1, setup.center.y - 1, 5, 5);
-            entity.add(new CityComponent(area));
+            CityStateMachine stateMachine = cityStateMachineFactory.create(entity, null);
+            ShieldUp shieldUp = shieldUpFactory.get();
+            stateMachine.changeState(shieldUp);
+            ShieldDown shieldDown = shieldDownFactory.get();
+            Destroyed destroyed = destroyedFactory.get();
+            entity.add(new CityComponent(
+                    area,
+                    setup.center,
+                    stateMachine,
+                    shieldUp,
+                    shieldDown,
+                    destroyed,
+                    shieldImage,
+                    cityImage,
+                    destroyedImage));
             entities.add(entity);
         }
         return entities;
@@ -136,14 +180,14 @@ public class EntitiesFactory {
         return entity;
     }
 
-    public Entity enemy() {
+    public Entity enemy(CityComponent cityComponent) {
         Entity entity = new Entity();
         EnemySetup enemySetup = random.randomElement(EnemySetup.values());
         Vector2 direction = rotationToVector(enemySetup.angle);
         float moveX = direction.x;
         float moveY = direction.y;
         entity.add(new MovementComponent(new Vector2(moveX, moveY), 0.01f));
-        Vector2 cityPos = random.randomElement(CitySetup.values()).center;
+        Vector2 cityPos = cityComponent.hitTarget;
         // invert direction for intersection
         direction.scl(-1);
         float distance = Intersector.intersectRayRay(cityPos, direction, ceiling, Vector2.X);
@@ -172,20 +216,56 @@ public class EntitiesFactory {
     }
 
     private enum CitySetup {
-        FIRST(new Vector2(10f, 5f), new Vector2(3f, 3f), "city-0"),
-        SECOND(new Vector2(58f, 4f), new Vector2(50f, 2f), "city-1"),
-        THIRD(new Vector2(98f, 4f), new Vector2(90f, 2f), "city-0"),
-        FOURTH(new Vector2(134f, 2f), new Vector2(127f, 0f), "city-1"),
+        FIRST(
+                new Vector2(10f, 5f),
+                new Vector2(3f, 3f),
+                new Vector2(-2.5f, 2f),
+                "city-0",
+                "destroyed-0",
+                new Vector2(-5f, -5f)),
+        SECOND(
+                new Vector2(58f, 4f),
+                new Vector2(50f, 2f),
+                new Vector2(-2.5f, 2f),
+                "city-1",
+                "destroyed-1",
+                new Vector2(-5f, -5f)),
+        THIRD(
+                new Vector2(98f, 4f),
+                new Vector2(90f, 2f),
+                new Vector2(-2.5f, 2f),
+                "city-0",
+                "destroyed-2",
+                new Vector2(-5f, -5f)),
+        FOURTH(
+                new Vector2(134f, 2f),
+                new Vector2(127f, 0f),
+                new Vector2(-2.5f, 2f),
+                "city-1",
+                "destroyed-0",
+                new Vector2(-5f, -5f)),
         ;
 
         public final Vector2 center;
         public final Vector2 position;
+        public final Vector2 shieldPosition;
         public final String image;
+        public final String destroyedImage;
+        public final Vector2 destroyedPosition;
 
-        CitySetup(Vector2 center, Vector2 position, String image) {
+        CitySetup(
+                Vector2 center,
+                Vector2 position,
+                Vector2 shieldPosition,
+                String image,
+                String destroyedImage,
+                Vector2 destroyedPosition) {
             this.center = center;
             this.position = position;
+            this.shieldPosition = shieldPosition;
             this.image = image;
+            this.destroyedImage = destroyedImage;
+            this.destroyedPosition = destroyedPosition;
         }
     }
 

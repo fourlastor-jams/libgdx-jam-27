@@ -14,8 +14,10 @@ import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.Layer;
 import io.github.fourlastor.game.level.bullet.BulletRemovalSystem;
 import io.github.fourlastor.game.level.bullet.BulletSpawnSystem;
+import io.github.fourlastor.game.level.city.CitySystem;
 import io.github.fourlastor.game.level.enemy.EnemyMovementSystem;
 import io.github.fourlastor.game.level.enemy.EnemyRemovalSystem;
+import io.github.fourlastor.game.level.enemy.EnemySpawnSystem;
 import io.github.fourlastor.game.level.input.PlayerInputSystem;
 import io.github.fourlastor.game.level.system.ActorFollowBodySystem;
 import io.github.fourlastor.game.level.system.ClearScreenSystem;
@@ -37,12 +39,16 @@ public class LevelModule {
             StageSystem stageSystem,
             ClearScreenSystem clearScreenSystem,
             BulletSpawnSystem bulletSpawnSystem,
-            BulletRemovalSystem bulletRemovalSystem) {
+            BulletRemovalSystem bulletRemovalSystem,
+            CitySystem citySystem,
+            EnemySpawnSystem enemySpawnSystem) {
         Engine engine = new Engine();
         engine.addSystem(bulletSpawnSystem);
         engine.addSystem(bulletRemovalSystem);
+        engine.addSystem(enemySpawnSystem);
         engine.addSystem(enemyMovementSystem);
         engine.addSystem(enemyRemovalSystem);
+        engine.addSystem(citySystem);
         engine.addSystem(playerInputSystem);
         engine.addSystem(actorFollowBodySystem);
         engine.addSystem(clearScreenSystem);
