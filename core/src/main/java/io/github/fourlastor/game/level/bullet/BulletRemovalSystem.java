@@ -27,11 +27,11 @@ public class BulletRemovalSystem extends IteratingSystem {
 
     @Inject
     public BulletRemovalSystem(
-            ComponentMapper<PositionComponent> positions, ComponentMapper<EnemyComponent> enemies, Stage stageArea) {
+            ComponentMapper<PositionComponent> positions, ComponentMapper<EnemyComponent> enemies, Stage stage) {
         super(FAMILY);
         this.positions = positions;
         this.enemies = enemies;
-        this.stageArea = new Rectangle(0, 0, stageArea.getWidth(), stageArea.getHeight());
+        this.stageArea = new Rectangle(0, 0, stage.getWidth(), stage.getHeight());
     }
 
     @Override

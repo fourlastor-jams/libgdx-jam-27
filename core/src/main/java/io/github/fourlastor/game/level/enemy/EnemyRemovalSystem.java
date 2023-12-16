@@ -7,7 +7,9 @@ import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import io.github.fourlastor.game.level.component.CityComponent;
 import io.github.fourlastor.game.level.component.EnemyComponent;
 import io.github.fourlastor.game.level.component.PositionComponent;
@@ -29,6 +31,7 @@ public class EnemyRemovalSystem extends IteratingSystem {
     private final ComponentMapper<PositionComponent> positions;
     private final ComponentMapper<EnemyComponent> enemies;
     private final MessageDispatcher messageDispatcher;
+    private final Rectangle stageArea;
     private ImmutableArray<Entity> cityEntities;
     private ImmutableArray<Entity> towerEntities;
 
@@ -37,12 +40,14 @@ public class EnemyRemovalSystem extends IteratingSystem {
             ComponentMapper<TargetComponent> targets,
             ComponentMapper<PositionComponent> positions,
             ComponentMapper<EnemyComponent> enemies,
-            MessageDispatcher messageDispatcher) {
+            MessageDispatcher messageDispatcher,
+            Stage stage) {
         super(FAMILY);
         this.targets = targets;
         this.positions = positions;
         this.enemies = enemies;
         this.messageDispatcher = messageDispatcher;
+        this.stageArea = new Rectangle(0, 0, stage.getWidth(), stage.getHeight());
     }
 
     @Override
@@ -61,12 +66,15 @@ public class EnemyRemovalSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        Vector2 position = positions.get(entity).position;
+        float headX = enemies.get(entity).headX;
+        if (position.y <= 1f) {
+            getEngine().removeEntity(entity);
+        }
         for (Entity city : cityEntities) {
             if (!targets.has(city)) {
                 continue;
             }
-            Vector2 position = positions.get(entity).position;
-            float headX = enemies.get(entity).headX;
             TargetComponent target = targets.get(city);
             if (target.area.contains(position.x + headX, position.y)) {
                 getEngine().removeEntity(entity);
@@ -78,8 +86,6 @@ public class EnemyRemovalSystem extends IteratingSystem {
             if (!targets.has(tower)) {
                 continue;
             }
-            Vector2 position = positions.get(entity).position;
-            float headX = enemies.get(entity).headX;
             TargetComponent target = targets.get(tower);
             if (target.area.contains(position.x + headX, position.y)) {
                 getEngine().removeEntity(entity);
