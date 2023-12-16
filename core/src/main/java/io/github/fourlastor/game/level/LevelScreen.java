@@ -31,6 +31,7 @@ public class LevelScreen extends ScreenAdapter {
 
     @Override
     public void show() {
+        engine.addEntity(entitiesFactory.fade());
         engine.addEntity(entitiesFactory.background());
         for (Entity turret : entitiesFactory.turrets()) {
             engine.addEntity(turret);
