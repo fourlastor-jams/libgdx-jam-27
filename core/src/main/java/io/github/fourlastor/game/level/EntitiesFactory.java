@@ -2,6 +2,7 @@ package io.github.fourlastor.game.level;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Intersector;
@@ -226,6 +227,18 @@ public class EntitiesFactory {
                         MathUtils.cos(degrees * MathUtils.degreesToRadians),
                         MathUtils.sin(degrees * MathUtils.degreesToRadians))
                 .nor();
+    }
+
+    public Entity fade() {
+        Entity entity = new Entity();
+        Drawable darkness = new TextureRegionDrawable(textureAtlas.findRegion("whitePixel"))
+                .tint(new Color(Config.Screen.CLEAR_COLOR));
+        Image darknessImage = new Image(darkness);
+        darknessImage.setSize(160f, 90f);
+        darknessImage.addAction(
+                Actions.sequence(Actions.fadeOut(0.5f), Actions.run(() -> darknessImage.setVisible(false))));
+        entity.add(new ActorComponent(darknessImage, Layer.FADE));
+        return entity;
     }
 
     private enum CitySetup {

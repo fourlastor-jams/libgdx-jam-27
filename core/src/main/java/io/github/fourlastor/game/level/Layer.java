@@ -6,4 +6,5 @@ public enum Layer {
     CITIES,
     BULLETS,
     ENEMIES,
+    FADE,
 }

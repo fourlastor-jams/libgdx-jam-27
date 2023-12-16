@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -51,6 +53,7 @@ public class IntroScreen extends ScreenAdapter {
     private Sound voiceOver;
 
     private SoundController soundController;
+    private Image darknessImage;
 
     @Inject
     public IntroScreen(
@@ -89,7 +92,7 @@ public class IntroScreen extends ScreenAdapter {
 
         @Override
         public boolean keyDown(int keycode) {
-//            transitionToLevelScreen();
+            //            transitionToLevelScreen();
             if (keycode == Input.Keys.Q) Gdx.app.exit();
             return super.keyDown(keycode);
         }
@@ -124,9 +127,12 @@ public class IntroScreen extends ScreenAdapter {
     }
 
     private void transitionToLevelScreen() {
-        introMusic.stop();
-        voiceOver.stop();
-        router.goToLevel();
+        darknessImage.addAction(Actions.sequence(
+                Actions.run(() -> darknessImage.setVisible(true)), Actions.fadeIn(0.5f), Actions.run(() -> {
+                    introMusic.stop();
+                    voiceOver.stop();
+                    router.goToLevel();
+                })));
     }
 
     private void setup() { // TODO
@@ -166,6 +172,13 @@ public class IntroScreen extends ScreenAdapter {
         for (Image layer : ground) layer.moveBy(0f, -66f);
 
         for (Image image : ground) stage.addActor(image);
+        Drawable darkness = new TextureRegionDrawable(textureAtlas.findRegion("whitePixel"))
+                .tint(new Color(Config.Screen.CLEAR_COLOR));
+        darknessImage = new Image(darkness);
+        darknessImage.setSize(stage.getWidth(), stage.getHeight());
+        darknessImage.getColor().a = 0f;
+        darknessImage.setVisible(false);
+        stage.addActor(darknessImage);
     }
 
     private void startAnimation() {
