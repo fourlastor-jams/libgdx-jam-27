@@ -2,6 +2,7 @@ package io.github.fourlastor.game.level.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import io.github.fourlastor.game.level.city.CityStateMachine;
 import io.github.fourlastor.game.level.city.state.Destroyed;
@@ -10,6 +11,7 @@ import io.github.fourlastor.game.level.city.state.ShieldUp;
 
 public class CityComponent implements Component {
     public final Rectangle area;
+    public final Vector2 hitTarget;
     public final CityStateMachine stateMachine;
     public final ShieldUp shieldUp;
     public final ShieldDown shieldDown;
@@ -20,6 +22,7 @@ public class CityComponent implements Component {
 
     public CityComponent(
             Rectangle area,
+            Vector2 hitTarget,
             CityStateMachine stateMachine,
             ShieldUp shieldUp,
             ShieldDown shieldDown,
@@ -28,6 +31,7 @@ public class CityComponent implements Component {
             Image cityImage,
             Image destroyedImage) {
         this.area = area;
+        this.hitTarget = hitTarget;
         this.stateMachine = stateMachine;
         this.shieldUp = shieldUp;
         this.shieldDown = shieldDown;

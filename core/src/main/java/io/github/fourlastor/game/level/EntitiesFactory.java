@@ -153,7 +153,15 @@ public class EntitiesFactory {
             ShieldDown shieldDown = shieldDownFactory.get();
             Destroyed destroyed = destroyedFactory.get();
             entity.add(new CityComponent(
-                    area, stateMachine, shieldUp, shieldDown, destroyed, shieldImage, cityImage, destroyedImage));
+                    area,
+                    setup.center,
+                    stateMachine,
+                    shieldUp,
+                    shieldDown,
+                    destroyed,
+                    shieldImage,
+                    cityImage,
+                    destroyedImage));
             entities.add(entity);
         }
         return entities;
@@ -172,14 +180,14 @@ public class EntitiesFactory {
         return entity;
     }
 
-    public Entity enemy() {
+    public Entity enemy(CityComponent cityComponent) {
         Entity entity = new Entity();
         EnemySetup enemySetup = random.randomElement(EnemySetup.values());
         Vector2 direction = rotationToVector(enemySetup.angle);
         float moveX = direction.x;
         float moveY = direction.y;
         entity.add(new MovementComponent(new Vector2(moveX, moveY), 0.01f));
-        Vector2 cityPos = random.randomElement(CitySetup.values()).center;
+        Vector2 cityPos = cityComponent.hitTarget;
         // invert direction for intersection
         direction.scl(-1);
         float distance = Intersector.intersectRayRay(cityPos, direction, ceiling, Vector2.X);
