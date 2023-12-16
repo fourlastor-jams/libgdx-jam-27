@@ -20,7 +20,6 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.FloatArray;
 import com.github.tommyettinger.textra.Effect;
-import com.github.tommyettinger.textra.TypingConfig;
 import com.github.tommyettinger.textra.TypingLabel;
 
 /**
@@ -87,5 +86,4 @@ public class ShakeFadeEffect extends Effect {
         label.offsets.incr(globalIndex << 1, x);
         label.offsets.incr(globalIndex << 1 | 1, y);
     }
-
 }

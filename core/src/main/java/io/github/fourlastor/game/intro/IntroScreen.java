@@ -16,7 +16,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
@@ -25,10 +24,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.TypingLabel;
-
 import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.route.Router;
-
 import javax.inject.Inject;
 
 public class IntroScreen extends ScreenAdapter {
@@ -62,8 +59,7 @@ public class IntroScreen extends ScreenAdapter {
             AssetManager assetManager,
             TextureAtlas textureAtlas,
             SoundController soundController,
-            Router router
-    ) {
+            Router router) {
         this.inputMultiplexer = inputMultiplexer;
         this.textureAtlas = textureAtlas;
         this.assetManager = assetManager;
@@ -95,8 +91,7 @@ public class IntroScreen extends ScreenAdapter {
         @Override
         public boolean keyDown(int keycode) {
             transitionToLevelScreen();
-            if (keycode == Input.Keys.Q)
-                Gdx.app.exit();
+            if (keycode == Input.Keys.Q) Gdx.app.exit();
             return super.keyDown(keycode);
         }
     };
@@ -147,7 +142,9 @@ public class IntroScreen extends ScreenAdapter {
         stage.addActor(planets);
 
         BitmapFont font = assetManager.get("fonts/play-16.fnt");
-        label = new TypingLabel("{FADE}{SLOWER}From the cosmic abyss\n{WAIT=0.75}emerged an ancient {COLOR=#944e87}{SHAKE}terror", new Font(font));
+        label = new TypingLabel(
+                "{FADE}{SLOWER}From the cosmic abyss\n{WAIT=0.75}emerged an ancient {COLOR=#944e87}{SHAKE}terror",
+                new Font(font));
         label.getFont().scale(.5f, .5f);
         label.setAlignment(Align.center);
         Table table = new Table();
@@ -168,69 +165,56 @@ public class IntroScreen extends ScreenAdapter {
         ground.get(1).setY(0f + offset);
         ground.get(0).setY(10f + offset); // background
 
-        for (Image layer : ground)
-            layer.moveBy(0f, -66f);
+        for (Image layer : ground) layer.moveBy(0f, -66f);
 
-        for (Image image : ground)
-            stage.addActor(image);
+        for (Image image : ground) stage.addActor(image);
     }
 
     private void startAnimation() {
         float durationOffset = 5f;
         float offset = 30f;
         float delay = 5f;
-        ground.get(0).addAction(Actions.sequence(
-                Actions.delay(delay),
-                Actions.moveBy(0f, 31f + offset, 5f + durationOffset, Interpolation.fastSlow)
-        ));
+        ground.get(0)
+                .addAction(Actions.sequence(
+                        Actions.delay(delay),
+                        Actions.moveBy(0f, 31f + offset, 5f + durationOffset, Interpolation.fastSlow)));
 
-        ground.get(1).addAction(Actions.sequence(
-                Actions.delay(delay),
-                Actions.moveBy(0f, 41f + offset, 7f + durationOffset, Interpolation.fastSlow))
-        );
-        ground.get(2).addAction(Actions.sequence(
-                Actions.delay(delay),
-                Actions.moveBy(0f, 49f + offset, 9f + durationOffset, Interpolation.fastSlow))
-        );
-        ground.get(3).addAction(Actions.sequence(
-                Actions.delay(delay),
-                Actions.moveBy(0f, 58f + offset, 11f + durationOffset, Interpolation.fastSlow))
-        );
-        ground.get(4).addAction(Actions.sequence(
-                Actions.delay(delay),
-                Actions.moveBy(0f, 70f + offset, 13f + durationOffset, Interpolation.fastSlow))
-        );
+        ground.get(1)
+                .addAction(Actions.sequence(
+                        Actions.delay(delay),
+                        Actions.moveBy(0f, 41f + offset, 7f + durationOffset, Interpolation.fastSlow)));
+        ground.get(2)
+                .addAction(Actions.sequence(
+                        Actions.delay(delay),
+                        Actions.moveBy(0f, 49f + offset, 9f + durationOffset, Interpolation.fastSlow)));
+        ground.get(3)
+                .addAction(Actions.sequence(
+                        Actions.delay(delay),
+                        Actions.moveBy(0f, 58f + offset, 11f + durationOffset, Interpolation.fastSlow)));
+        ground.get(4)
+                .addAction(Actions.sequence(
+                        Actions.delay(delay),
+                        Actions.moveBy(0f, 70f + offset, 13f + durationOffset, Interpolation.fastSlow)));
 
         planets.addAction(Actions.moveBy(0f, 5f + offset, 13f + durationOffset, Interpolation.fastSlow));
         stars.addAction(Actions.moveBy(0f, 2f + offset, 13f + durationOffset, Interpolation.fastSlow));
 
-        stars.addAction(Actions.sequence(
-                Actions.delay(23f),
-                Actions.run(() -> {
-                    soundController.play(introMusic, 1f, false);
-                })
-        ));
+        stars.addAction(Actions.sequence(Actions.delay(23f), Actions.run(() -> {
+            soundController.play(introMusic, 1f, false);
+        })));
 
-        label.addAction(Actions.sequence(
-                Actions.delay(8f),
-                Actions.run(() -> {
-                    label.setText("{FADE}{SLOWER}Our world was forcibly reshaped\n in {COLOR=#ebe5ab}their image{CLEARCOLOR}. " +
-                            "{WAIT=0.75}Abolishing sapient life.");
-                    label.restart();
-                })
-        ));
-        label.addAction(Actions.sequence(
-                Actions.delay(17f),
-                Actions.run(() -> {
-                    label.setText("{FADE}{SLOWER}{SHAKE}we're all that's left{WAIT=0.75}\n" +
-                            "and this{WAIT=0.75} is our {ENDSHAKE}{COLOR=#a1234d}last {WAIT=0.75}stand.");
-                    label.restart();
-                })
-        ));
-        ground.first().addAction(Actions.sequence(
-                Actions.delay(30f),
-                Actions.run(() -> {
-                    transitionToLevelScreen();
-                })));
+        label.addAction(Actions.sequence(Actions.delay(8f), Actions.run(() -> {
+            label.setText("{FADE}{SLOWER}Our world was forcibly reshaped\n in {COLOR=#ebe5ab}their image{CLEARCOLOR}. "
+                    + "{WAIT=0.75}Abolishing sapient life.");
+            label.restart();
+        })));
+        label.addAction(Actions.sequence(Actions.delay(17f), Actions.run(() -> {
+            label.setText("{FADE}{SLOWER}{SHAKE}we're all that's left{WAIT=0.75}\n"
+                    + "and this{WAIT=0.75} is our {ENDSHAKE}{COLOR=#a1234d}last {WAIT=0.75}stand.");
+            label.restart();
+        })));
+        ground.first().addAction(Actions.sequence(Actions.delay(30f), Actions.run(() -> {
+            transitionToLevelScreen();
+        })));
     }
 }

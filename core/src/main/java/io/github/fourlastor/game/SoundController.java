@@ -4,14 +4,13 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import io.github.fourlastor.perceptual.Perceptual;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class SoundController {
-    private final static float SOUND_VOLUME = 0.45f;
-    private final static float MUSIC_VOLUME = 0.7f;
+    private static final float SOUND_VOLUME = 0.45f;
+    private static final float MUSIC_VOLUME = 0.7f;
 
     @Inject
     public SoundController() {}
