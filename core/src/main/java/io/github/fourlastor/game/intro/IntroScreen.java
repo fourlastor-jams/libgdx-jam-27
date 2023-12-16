@@ -54,6 +54,8 @@ public class IntroScreen extends ScreenAdapter {
     private Music introMusic;
     private Sound voiceOver;
 
+    private SoundController soundController;
+
     @Inject
     public IntroScreen(
             InputMultiplexer inputMultiplexer,
@@ -66,12 +68,13 @@ public class IntroScreen extends ScreenAdapter {
         this.textureAtlas = textureAtlas;
         this.assetManager = assetManager;
         this.router = router;
+        this.soundController = soundController;
 
         viewport = new FitViewport(160f, 90f);
         stage = new Stage(viewport);
 
         introMusic = assetManager.get("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
-        // soundController.play(introMusic, 1f, false);
+        soundController.play(introMusic, .75f, false);
 
         voiceOver = assetManager.get("audio/sounds/voice/intro voice over.mp3", Sound.class);
         soundController.play(voiceOver, 1f);
@@ -103,9 +106,6 @@ public class IntroScreen extends ScreenAdapter {
         setup();
         startAnimation();
 
-        introMusic.setVolume(1f);
-        introMusic.play();
-
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(processor);
     }
@@ -126,14 +126,13 @@ public class IntroScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0.071f, 0.024f, 0.071f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        System.out.println(introMusic.isPlaying());
-
         stage.act(delta);
         stage.draw();
     }
 
     private void transitionToLevelScreen() {
         introMusic.stop();
+        voiceOver.stop();
         router.goToLevel();
     }
 
@@ -204,6 +203,13 @@ public class IntroScreen extends ScreenAdapter {
 
         planets.addAction(Actions.moveBy(0f, 5f + offset, 13f + durationOffset, Interpolation.fastSlow));
         stars.addAction(Actions.moveBy(0f, 2f + offset, 13f + durationOffset, Interpolation.fastSlow));
+
+        stars.addAction(Actions.sequence(
+                Actions.delay(23f),
+                Actions.run(() -> {
+                    soundController.play(introMusic, 1f, false);
+                })
+        ));
 
         label.addAction(Actions.sequence(
                 Actions.delay(8f),
