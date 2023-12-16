@@ -14,9 +14,12 @@ import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.Layer;
 import io.github.fourlastor.game.level.bullet.BulletRemovalSystem;
 import io.github.fourlastor.game.level.bullet.BulletSpawnSystem;
+import io.github.fourlastor.game.level.city.CitySystem;
+import io.github.fourlastor.game.level.enemy.EnemyRemovalSystem;
+import io.github.fourlastor.game.level.enemy.EnemySpawnSystem;
+import io.github.fourlastor.game.level.enemy.MovementSystem;
 import io.github.fourlastor.game.level.input.PlayerInputSystem;
 import io.github.fourlastor.game.level.system.ActorFollowBodySystem;
-import io.github.fourlastor.game.level.system.CameraMovementSystem;
 import io.github.fourlastor.game.level.system.ClearScreenSystem;
 import io.github.fourlastor.harlequin.system.StageSystem;
 import java.lang.annotation.Retention;
@@ -30,17 +33,23 @@ public class LevelModule {
     @ScreenScoped
     public Engine engine(
             PlayerInputSystem playerInputSystem,
-            CameraMovementSystem cameraMovementSystem,
             ActorFollowBodySystem actorFollowBodySystem,
+            MovementSystem movementSystem,
+            EnemyRemovalSystem enemyRemovalSystem,
             StageSystem stageSystem,
             ClearScreenSystem clearScreenSystem,
             BulletSpawnSystem bulletSpawnSystem,
-            BulletRemovalSystem bulletRemovalSystem) {
+            BulletRemovalSystem bulletRemovalSystem,
+            CitySystem citySystem,
+            EnemySpawnSystem enemySpawnSystem) {
         Engine engine = new Engine();
         engine.addSystem(bulletSpawnSystem);
         engine.addSystem(bulletRemovalSystem);
+        engine.addSystem(enemySpawnSystem);
+        engine.addSystem(movementSystem);
+        engine.addSystem(enemyRemovalSystem);
+        engine.addSystem(citySystem);
         engine.addSystem(playerInputSystem);
-        engine.addSystem(cameraMovementSystem);
         engine.addSystem(actorFollowBodySystem);
         engine.addSystem(clearScreenSystem);
         engine.addSystem(stageSystem);
