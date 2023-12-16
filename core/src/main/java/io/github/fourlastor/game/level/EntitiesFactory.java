@@ -116,8 +116,8 @@ public class EntitiesFactory {
             Image image = new Image(textureAtlas.findRegion("cities/" + setup.image));
             image.setPosition(setup.position.x, setup.position.y);
             entity.add(new ActorComponent(image, Layer.CITIES));
-            entity.add(new CityComponent(
-                    new Rectangle(setup.center.x - 8, setup.center.y - 8, setup.center.x + 8, setup.center.y + 8)));
+            Rectangle area = new Rectangle(setup.center.x - 1, setup.center.y - 1, 5, 5);
+            entity.add(new CityComponent(area));
             entities.add(entity);
         }
         return entities;
@@ -172,10 +172,10 @@ public class EntitiesFactory {
     }
 
     private enum CitySetup {
-        FIRST(new Vector2(12f, 14f), new Vector2(3f, 3f), "city-0"),
-        SECOND(new Vector2(54f, 10f), new Vector2(50f, 2f), "city-1"),
-        THIRD(new Vector2(94f, 6f), new Vector2(90f, 2f), "city-0"),
-        FOURTH(new Vector2(135f, 1f), new Vector2(127f, 0f), "city-1"),
+        FIRST(new Vector2(10f, 5f), new Vector2(3f, 3f), "city-0"),
+        SECOND(new Vector2(58f, 4f), new Vector2(50f, 2f), "city-1"),
+        THIRD(new Vector2(98f, 4f), new Vector2(90f, 2f), "city-0"),
+        FOURTH(new Vector2(134f, 2f), new Vector2(127f, 0f), "city-1"),
         ;
 
         public final Vector2 center;

@@ -51,7 +51,8 @@ public class EnemyRemovalSystem extends IteratingSystem {
         for (Entity city : cityEntities) {
             Vector2 position = positions.get(entity).position;
             float headX = enemies.get(entity).headX;
-            if (cities.get(city).area.contains(position.x + headX, position.y)) {
+            CityComponent cityComponent = cities.get(city);
+            if (cityComponent.area.contains(position.x + headX, position.y)) {
                 getEngine().removeEntity(entity);
             }
         }
