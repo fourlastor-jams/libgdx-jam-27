@@ -105,8 +105,12 @@ public class EntitiesFactory {
         for (TurretSetup setup : TurretSetup.values()) {
             Entity entity = new Entity();
             Group actor = new Group();
-            Image towerImage = new Image(textureAtlas.findRegion("cannon/tower-" + setup.ordinal()));
+            Image towerImage = new Image(textureAtlas.findRegion("cannon/" + setup.turretImage));
+            Image destroyedImage = new Image(textureAtlas.findRegion("cannon/" + setup.destroyedImage));
+            destroyedImage.setPosition(setup.destroyedOffset.x, setup.destroyedOffset.y);
+            destroyedImage.setVisible(false);
             actor.addActor(towerImage);
+            actor.addActor(destroyedImage);
             actor.setPosition(setup.towerPosition.x, setup.towerPosition.y);
             AnimatedImage animatedImage = new AnimatedImage(new FixedFrameAnimation<>(frameLength, drawables));
             animatedImage.setPosition(setup.turretOffset.x, setup.turretOffset.y);
@@ -124,6 +128,8 @@ public class EntitiesFactory {
             entity.add(new TurretComponent(
                     stateMachine,
                     animatedImage,
+                    towerImage,
+                    destroyedImage,
                     aiming,
                     idle,
                     destroyed,
@@ -276,21 +282,62 @@ public class EntitiesFactory {
     }
 
     private enum TurretSetup {
-        LEFT(Input.Keys.A, Input.Keys.S, new Vector2(19f, 5f), new Vector2(16.5f, 11f)),
-        CENTER_LEFT(Input.Keys.D, Input.Keys.F, new Vector2(65f, 4f), new Vector2(16.5f, 11f)),
-        CENTER_RIGHT(Input.Keys.G, Input.Keys.H, new Vector2(104f, 4f), new Vector2(11.5f, 12f)),
-        RIGHT(Input.Keys.J, Input.Keys.K, new Vector2(143f, 4f), new Vector2(9.5f, 13.5f)),
+        LEFT(
+                Input.Keys.A,
+                Input.Keys.S,
+                new Vector2(19f, 5f),
+                new Vector2(16.5f, 11f),
+                "tower-0",
+                "destroyed-0",
+                new Vector2(15f, 3f)),
+        CENTER_LEFT(
+                Input.Keys.D,
+                Input.Keys.F,
+                new Vector2(65f, 4f),
+                new Vector2(16.5f, 11f),
+                "tower-1",
+                "destroyed-1",
+                new Vector2(15f, 3f)),
+        CENTER_RIGHT(
+                Input.Keys.G,
+                Input.Keys.H,
+                new Vector2(104f, 4f),
+                new Vector2(11.5f, 12f),
+                "tower-2",
+                "destroyed-2",
+                new Vector2(10f, 6f)),
+        RIGHT(
+                Input.Keys.J,
+                Input.Keys.K,
+                new Vector2(143f, 4f),
+                new Vector2(9.5f, 13.5f),
+                "tower-3",
+                "destroyed-0",
+                new Vector2(8f, 7f)),
         ;
         public final int left;
         public final int right;
         public final Vector2 towerPosition;
         public final Vector2 turretOffset;
+        public final String turretImage;
+        public final String destroyedImage;
+        public final Vector2 destroyedOffset;
 
-        TurretSetup(int left, int right, Vector2 towerPosition, Vector2 turretOffset) {
+        TurretSetup(
+                int left,
+                int right,
+                Vector2 towerPosition,
+                Vector2 turretOffset,
+                String turretImage,
+                String destroyedImage,
+                Vector2 destroyedOffset) {
             this.left = left;
             this.right = right;
             this.towerPosition = towerPosition;
             this.turretOffset = turretOffset;
+            this.turretImage = turretImage;
+            this.destroyedImage = destroyedImage;
+            this.destroyedOffset = destroyedOffset;
         }
     }
 
