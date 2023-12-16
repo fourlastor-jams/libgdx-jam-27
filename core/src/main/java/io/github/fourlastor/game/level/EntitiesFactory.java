@@ -209,7 +209,7 @@ public class EntitiesFactory {
     }
 
     private enum EnemySetup {
-        ENEMY_200("enemy-200", 200f),
+        //        ENEMY_200("enemy-200", 200f),
         ENEMY_210("enemy-210", 210f),
         ENEMY_225("enemy-225", 225f),
         ENEMY_240("enemy-240", 240f),
@@ -221,8 +221,8 @@ public class EntitiesFactory {
         ENEMY_300("enemy-300", 300f),
         ENEMY_315("enemy-315", 315f),
         ENEMY_330("enemy-330", 330f),
-        ENEMY_340("enemy-340", 340f),
-        ;
+    //        ENEMY_340("enemy-340", 340f),
+    ;
         public final String image;
         public final float angle;
 
