@@ -55,7 +55,7 @@ public class EntitiesFactory {
     private final Provider<Destroyed> destroyedFactory;
     private final TextureAtlas.AtlasRegion fireRegion;
     private final EnhancedRandom random;
-    private Vector2 ceiling;
+    private final Vector2 ceiling;
 
     @Inject
     public EntitiesFactory(
