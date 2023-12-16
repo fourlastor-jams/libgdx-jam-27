@@ -3,6 +3,7 @@ package io.github.fourlastor.game.level;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -116,6 +117,9 @@ public class EntitiesFactory {
             Group group = new Group();
             Image cityImage = new Image(textureAtlas.findRegion("cities/" + setup.image));
             Image shieldImage = new Image(textureAtlas.findRegion("cities/shield"));
+            shieldImage.setOrigin(Align.top);
+            shieldImage.setScale(1f, 0f);
+            shieldImage.addAction(Actions.sequence(Actions.delay(random.nextFloat(0.8f)), Actions.scaleTo(1f, 1f, 0.6f, Interpolation.exp10)));
             shieldImage.setPosition(setup.shieldPosition.x, setup.shieldPosition.y);
             group.setPosition(setup.position.x, setup.position.y);
             group.addActor(cityImage);
