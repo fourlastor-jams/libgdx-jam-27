@@ -119,7 +119,8 @@ public class EntitiesFactory {
             Image shieldImage = new Image(textureAtlas.findRegion("cities/shield"));
             shieldImage.setOrigin(Align.top);
             shieldImage.setScale(1f, 0f);
-            shieldImage.addAction(Actions.sequence(Actions.delay(random.nextFloat(0.8f)), Actions.scaleTo(1f, 1f, 0.6f, Interpolation.exp10)));
+            shieldImage.addAction(Actions.sequence(
+                    Actions.delay(random.nextFloat(0.8f)), Actions.scaleTo(1f, 1f, 0.6f, Interpolation.exp10)));
             shieldImage.setPosition(setup.shieldPosition.x, setup.shieldPosition.y);
             group.setPosition(setup.position.x, setup.position.y);
             group.addActor(cityImage);
