@@ -76,7 +76,7 @@ public class IntroScreen extends ScreenAdapter {
         introMusic = assetManager.get("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
         soundController.play(introMusic, .75f, false);
 
-        voiceOver = assetManager.get("audio/sounds/voice/intro voice over.mp3", Sound.class);
+        voiceOver = assetManager.get("audio/sounds/voice/intro voice over new.mp3", Sound.class);
         soundController.play(voiceOver, 1f);
     }
 
