@@ -6,15 +6,13 @@ import com.badlogic.gdx.ai.msg.MessageDispatcher;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool;
 import io.github.fourlastor.game.level.Config;
-import io.github.fourlastor.game.level.component.Turret;
+import io.github.fourlastor.game.level.component.TurretComponent;
 import io.github.fourlastor.game.level.event.Message;
 import io.github.fourlastor.game.level.event.SpawnBullet;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
 import javax.inject.Inject;
 
 public class Aiming extends InputState {
-
-    private static final float AIM_SPEED = 30f;
 
     private final MessageDispatcher messageDispatcher;
 
@@ -37,7 +35,7 @@ public class Aiming extends InputState {
     @Override
     public void update(Entity entity) {
         int direction = 0;
-        Turret turret = turret(entity);
+        TurretComponent turret = turret(entity);
         if (Gdx.input.isKeyPressed(turret.left)) {
             direction -= 1;
         }

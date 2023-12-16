@@ -3,7 +3,7 @@ package io.github.fourlastor.game.level.input.state;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.ai.fsm.State;
 import com.badlogic.gdx.ai.msg.Telegram;
-import io.github.fourlastor.game.level.component.Turret;
+import io.github.fourlastor.game.level.component.TurretComponent;
 
 public abstract class InputState implements State<Entity> {
 
@@ -22,7 +22,7 @@ public abstract class InputState implements State<Entity> {
         return delta;
     }
 
-    protected Turret turret(Entity entity) {
+    protected TurretComponent turret(Entity entity) {
         return mappers.turrets.get(entity);
     }
 
@@ -38,5 +38,10 @@ public abstract class InputState implements State<Entity> {
     @Override
     public boolean onMessage(Entity entity, Telegram telegram) {
         return false;
+    }
+
+    public void onHit(Entity entity) {
+        TurretComponent turret = turret(entity);
+        turret.stateMachine.changeState(turret.destroyed);
     }
 }

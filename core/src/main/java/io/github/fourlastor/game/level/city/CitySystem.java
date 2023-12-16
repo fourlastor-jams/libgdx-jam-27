@@ -30,6 +30,7 @@ public class CitySystem extends EntitySystem implements Telegraph {
 
     @Override
     public void removedFromEngine(Engine engine) {
+        messageDispatcher.removeListener(this, Message.CITY_HIT.ordinal());
         super.removedFromEngine(engine);
     }
 
