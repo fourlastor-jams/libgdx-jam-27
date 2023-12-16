@@ -41,6 +41,9 @@ public class LevelScreen extends ScreenAdapter {
         for (Entity turret : entitiesFactory.turrets()) {
             engine.addEntity(turret);
         }
+        for (Entity turret : entitiesFactory.cities()) {
+            engine.addEntity(turret);
+        }
     }
 
     @Override

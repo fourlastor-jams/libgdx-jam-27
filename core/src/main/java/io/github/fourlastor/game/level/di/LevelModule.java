@@ -14,9 +14,10 @@ import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.Layer;
 import io.github.fourlastor.game.level.bullet.BulletRemovalSystem;
 import io.github.fourlastor.game.level.bullet.BulletSpawnSystem;
+import io.github.fourlastor.game.level.enemy.EnemyMovementSystem;
+import io.github.fourlastor.game.level.enemy.EnemyRemovalSystem;
 import io.github.fourlastor.game.level.input.PlayerInputSystem;
 import io.github.fourlastor.game.level.system.ActorFollowBodySystem;
-import io.github.fourlastor.game.level.system.CameraMovementSystem;
 import io.github.fourlastor.game.level.system.ClearScreenSystem;
 import io.github.fourlastor.harlequin.system.StageSystem;
 import java.lang.annotation.Retention;
@@ -30,8 +31,9 @@ public class LevelModule {
     @ScreenScoped
     public Engine engine(
             PlayerInputSystem playerInputSystem,
-            CameraMovementSystem cameraMovementSystem,
             ActorFollowBodySystem actorFollowBodySystem,
+            EnemyMovementSystem enemyMovementSystem,
+            EnemyRemovalSystem enemyRemovalSystem,
             StageSystem stageSystem,
             ClearScreenSystem clearScreenSystem,
             BulletSpawnSystem bulletSpawnSystem,
@@ -39,8 +41,9 @@ public class LevelModule {
         Engine engine = new Engine();
         engine.addSystem(bulletSpawnSystem);
         engine.addSystem(bulletRemovalSystem);
+        engine.addSystem(enemyMovementSystem);
+        engine.addSystem(enemyRemovalSystem);
         engine.addSystem(playerInputSystem);
-        engine.addSystem(cameraMovementSystem);
         engine.addSystem(actorFollowBodySystem);
         engine.addSystem(clearScreenSystem);
         engine.addSystem(stageSystem);

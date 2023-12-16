@@ -7,6 +7,10 @@ import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.component.AnimatedImageComponent;
 import io.github.fourlastor.game.level.component.BodyBuilderComponent;
 import io.github.fourlastor.game.level.component.BodyComponent;
+import io.github.fourlastor.game.level.component.CityComponent;
+import io.github.fourlastor.game.level.component.EnemyComponent;
+import io.github.fourlastor.game.level.component.MovementComponent;
+import io.github.fourlastor.game.level.component.PositionComponent;
 import io.github.fourlastor.game.level.component.Turret;
 import io.github.fourlastor.harlequin.component.ActorComponent;
 
@@ -39,7 +43,31 @@ public class EcsModule {
 
     @Provides
     @ScreenScoped
-    public ComponentMapper<Turret> playerComponent() {
+    public ComponentMapper<Turret> turretComponent() {
         return ComponentMapper.getFor(Turret.class);
+    }
+
+    @Provides
+    @ScreenScoped
+    public ComponentMapper<CityComponent> cityComponent() {
+        return ComponentMapper.getFor(CityComponent.class);
+    }
+
+    @Provides
+    @ScreenScoped
+    public ComponentMapper<PositionComponent> positionComponent() {
+        return ComponentMapper.getFor(PositionComponent.class);
+    }
+
+    @Provides
+    @ScreenScoped
+    public ComponentMapper<MovementComponent> movementComponent() {
+        return ComponentMapper.getFor(MovementComponent.class);
+    }
+
+    @Provides
+    @ScreenScoped
+    public ComponentMapper<EnemyComponent> enemyComponent() {
+        return ComponentMapper.getFor(EnemyComponent.class);
     }
 }
