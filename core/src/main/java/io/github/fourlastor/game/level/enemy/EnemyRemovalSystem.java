@@ -61,12 +61,15 @@ public class EnemyRemovalSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
+        Vector2 position = positions.get(entity).position;
+        float headX = enemies.get(entity).headX;
+        if (position.y <= 1f) {
+            getEngine().removeEntity(entity);
+        }
         for (Entity city : cityEntities) {
             if (!targets.has(city)) {
                 continue;
             }
-            Vector2 position = positions.get(entity).position;
-            float headX = enemies.get(entity).headX;
             TargetComponent target = targets.get(city);
             if (target.area.contains(position.x + headX, position.y)) {
                 getEngine().removeEntity(entity);
@@ -78,8 +81,6 @@ public class EnemyRemovalSystem extends IteratingSystem {
             if (!targets.has(tower)) {
                 continue;
             }
-            Vector2 position = positions.get(entity).position;
-            float headX = enemies.get(entity).headX;
             TargetComponent target = targets.get(tower);
             if (target.area.contains(position.x + headX, position.y)) {
                 getEngine().removeEntity(entity);
