@@ -1,7 +1,7 @@
 package io.github.fourlastor.game.level.city.state;
 
 import com.badlogic.ashley.core.Entity;
-import io.github.fourlastor.game.level.component.DestroyedComponent;
+import io.github.fourlastor.game.level.component.TargetComponent;
 import javax.inject.Inject;
 
 public class Destroyed extends CityState {
@@ -16,7 +16,7 @@ public class Destroyed extends CityState {
         super.enter(entity);
         city(entity).cityImage.setVisible(false);
         city(entity).destroyedImage.setVisible(true);
-        entity.add(new DestroyedComponent());
+        entity.remove(TargetComponent.class);
     }
 
     @Override

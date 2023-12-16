@@ -10,47 +10,46 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.github.tommyettinger.random.EnhancedRandom;
 import io.github.fourlastor.game.level.EntitiesFactory;
-import io.github.fourlastor.game.level.component.CityComponent;
-import io.github.fourlastor.game.level.component.DestroyedComponent;
+import io.github.fourlastor.game.level.component.TargetComponent;
 import javax.inject.Inject;
 
 public class EnemySpawnSystem extends EntitySystem {
     private static final Family FAMILY_CITIES =
-            Family.all(CityComponent.class).exclude(DestroyedComponent.class).get();
+            Family.all(TargetComponent.class).get();
 
     private final EntitiesFactory entitiesFactory;
     private final EnhancedRandom random;
-    private final ComponentMapper<CityComponent> cities;
-    private ImmutableArray<Entity> cityEntities;
+    private final ComponentMapper<TargetComponent> targets;
+    private ImmutableArray<Entity> targetEntities;
 
     @Inject
     public EnemySpawnSystem(
-            EntitiesFactory entitiesFactory, EnhancedRandom random, ComponentMapper<CityComponent> cities) {
+            EntitiesFactory entitiesFactory, EnhancedRandom random, ComponentMapper<TargetComponent> targets) {
         this.entitiesFactory = entitiesFactory;
         this.random = random;
-        this.cities = cities;
+        this.targets = targets;
     }
 
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
-        cityEntities = engine.getEntitiesFor(FAMILY_CITIES);
+        targetEntities = engine.getEntitiesFor(FAMILY_CITIES);
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
-        int cityCount = cityEntities.size();
+        int cityCount = targetEntities.size();
         if (cityCount > 0 && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
             int cityIndex = random.nextInt(cityCount);
-            CityComponent cityComponent = cities.get(cityEntities.get(cityIndex));
-            getEngine().addEntity(entitiesFactory.enemy(cityComponent));
+            TargetComponent target = targets.get(targetEntities.get(cityIndex));
+            getEngine().addEntity(entitiesFactory.enemy(target));
         }
     }
 
     @Override
     public void removedFromEngine(Engine engine) {
-        cityEntities = null;
+        targetEntities = null;
         super.removedFromEngine(engine);
     }
 }

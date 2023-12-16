@@ -28,6 +28,7 @@ import io.github.fourlastor.game.level.component.CityComponent;
 import io.github.fourlastor.game.level.component.EnemyComponent;
 import io.github.fourlastor.game.level.component.MovementComponent;
 import io.github.fourlastor.game.level.component.PositionComponent;
+import io.github.fourlastor.game.level.component.TargetComponent;
 import io.github.fourlastor.game.level.component.Turret;
 import io.github.fourlastor.game.level.input.InputStateMachine;
 import io.github.fourlastor.game.level.input.state.Aiming;
@@ -153,15 +154,8 @@ public class EntitiesFactory {
             ShieldDown shieldDown = shieldDownFactory.get();
             Destroyed destroyed = destroyedFactory.get();
             entity.add(new CityComponent(
-                    area,
-                    setup.center,
-                    stateMachine,
-                    shieldUp,
-                    shieldDown,
-                    destroyed,
-                    shieldImage,
-                    cityImage,
-                    destroyedImage));
+                    area, stateMachine, shieldUp, shieldDown, destroyed, shieldImage, cityImage, destroyedImage));
+            entity.add(new TargetComponent(setup.center));
             entities.add(entity);
         }
         return entities;
@@ -180,14 +174,14 @@ public class EntitiesFactory {
         return entity;
     }
 
-    public Entity enemy(CityComponent cityComponent) {
+    public Entity enemy(TargetComponent targetComponent) {
         Entity entity = new Entity();
         EnemySetup enemySetup = random.randomElement(EnemySetup.values());
         Vector2 direction = rotationToVector(enemySetup.angle);
         float moveX = direction.x;
         float moveY = direction.y;
         entity.add(new MovementComponent(new Vector2(moveX, moveY), 0.01f));
-        Vector2 cityPos = cityComponent.hitTarget;
+        Vector2 cityPos = targetComponent.hitTarget;
         // invert direction for intersection
         direction.scl(-1);
         float distance = Intersector.intersectRayRay(cityPos, direction, ceiling, Vector2.X);
