@@ -64,7 +64,9 @@ public class EnemySpawnSystem extends IntervalSystem {
             maxEnemies = 5;
         }
         int enemyCount = enemyEntities.size();
-        for (int i = enemyCount, tick = 0; i < maxEnemies && tick <= MAX_ENEMIES_TICK; i++, tick++) {
+        for (int totalEnemies = enemyCount, enemySpawned = 0;
+                totalEnemies <= maxEnemies && enemySpawned <= MAX_ENEMIES_TICK;
+                totalEnemies++, enemySpawned++) {
             spawnEnemy();
         }
     }
