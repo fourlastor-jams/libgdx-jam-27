@@ -188,7 +188,7 @@ public class EntitiesFactory {
         Vector2 direction = rotationToVector(degrees).scl(Config.Bullet.SPEED);
         //        image.addAction(Actions.forever(Actions.moveBy(direction.x, direction.y, 0.1f)));
         entity.add(new ActorComponent(image, Layer.BULLETS));
-        entity.add(new MovementComponent(direction, 0.1f));
+        entity.add(new MovementComponent(new Vector2(direction), 0.1f));
         entity.add(new PositionComponent(new Vector2(x, y)));
         return entity;
     }
@@ -199,7 +199,7 @@ public class EntitiesFactory {
         Vector2 direction = rotationToVector(enemySetup.angle);
         float moveX = direction.x;
         float moveY = direction.y;
-        entity.add(new MovementComponent(new Vector2(moveX, moveY), 0.01f));
+        entity.add(new MovementComponent(new Vector2(moveX, moveY), 0.2f));
         Vector2 cityPos = targetComponent.hitTarget;
         // invert direction for intersection
         direction.scl(-1);
