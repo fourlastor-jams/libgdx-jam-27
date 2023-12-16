@@ -60,7 +60,7 @@ public class BulletRemovalSystem extends IteratingSystem {
             Vector2 enemyPosition = positions.get(enemy).position;
             float headX = enemies.get(enemy).headX;
             float dst = position.dst(enemyPosition.x + headX, enemyPosition.y);
-            if (dst < 8f) {
+            if (dst < 2f) {
                 getEngine().removeEntity(entity);
                 getEngine().removeEntity(enemy);
             }
