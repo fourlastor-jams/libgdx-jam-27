@@ -4,21 +4,18 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import io.github.fourlastor.game.level.component.EnemyComponent;
 import io.github.fourlastor.game.level.component.MovementComponent;
 import io.github.fourlastor.game.level.component.PositionComponent;
 import javax.inject.Inject;
 
-public class EnemyMovementSystem extends IteratingSystem {
+public class MovementSystem extends IteratingSystem {
 
     private final ComponentMapper<MovementComponent> movements;
     private final ComponentMapper<PositionComponent> positions;
 
     @Inject
-    public EnemyMovementSystem(
-            ComponentMapper<MovementComponent> movements, ComponentMapper<PositionComponent> positions) {
-        super(Family.all(EnemyComponent.class, MovementComponent.class, PositionComponent.class)
-                .get());
+    public MovementSystem(ComponentMapper<MovementComponent> movements, ComponentMapper<PositionComponent> positions) {
+        super(Family.all(MovementComponent.class, PositionComponent.class).get());
         this.movements = movements;
         this.positions = positions;
     }

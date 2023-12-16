@@ -183,12 +183,13 @@ public class EntitiesFactory {
         Entity entity = new Entity();
         entity.add(new BulletComponent(degrees));
         Image image = new Image(fireRegion);
-        image.setPosition(x, y, Align.bottom);
-        image.setOrigin(Align.bottom | Align.center);
+        image.setPosition(x, y);
         image.setRotation(degrees + 90);
         Vector2 direction = rotationToVector(degrees).scl(Config.Bullet.SPEED);
-        image.addAction(Actions.forever(Actions.moveBy(direction.x, direction.y, 0.1f)));
+        //        image.addAction(Actions.forever(Actions.moveBy(direction.x, direction.y, 0.1f)));
         entity.add(new ActorComponent(image, Layer.BULLETS));
+        entity.add(new MovementComponent(direction, 0.1f));
+        entity.add(new PositionComponent(new Vector2(x, y)));
         return entity;
     }
 
