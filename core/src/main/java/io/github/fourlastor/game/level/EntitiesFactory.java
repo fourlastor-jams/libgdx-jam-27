@@ -113,9 +113,14 @@ public class EntitiesFactory {
         ObjectList<Entity> entities = new ObjectList<>(CitySetup.values().length);
         for (CitySetup setup : CitySetup.values()) {
             Entity entity = new Entity();
-            Image image = new Image(textureAtlas.findRegion("cities/" + setup.image));
-            image.setPosition(setup.position.x, setup.position.y);
-            entity.add(new ActorComponent(image, Layer.CITIES));
+            Group group = new Group();
+            Image cityImage = new Image(textureAtlas.findRegion("cities/" + setup.image));
+            Image shieldImage = new Image(textureAtlas.findRegion("cities/shield"));
+            shieldImage.setPosition(setup.shieldPosition.x, setup.shieldPosition.y);
+            group.setPosition(setup.position.x, setup.position.y);
+            group.addActor(cityImage);
+            group.addActor(shieldImage);
+            entity.add(new ActorComponent(group, Layer.CITIES));
             Rectangle area = new Rectangle(setup.center.x - 1, setup.center.y - 1, 5, 5);
             entity.add(new CityComponent(area));
             entities.add(entity);
@@ -172,19 +177,21 @@ public class EntitiesFactory {
     }
 
     private enum CitySetup {
-        FIRST(new Vector2(10f, 5f), new Vector2(3f, 3f), "city-0"),
-        SECOND(new Vector2(58f, 4f), new Vector2(50f, 2f), "city-1"),
-        THIRD(new Vector2(98f, 4f), new Vector2(90f, 2f), "city-0"),
-        FOURTH(new Vector2(134f, 2f), new Vector2(127f, 0f), "city-1"),
+        FIRST(new Vector2(10f, 5f), new Vector2(3f, 3f), new Vector2(-2.5f, 2f), "city-0"),
+        SECOND(new Vector2(58f, 4f), new Vector2(50f, 2f), new Vector2(-2.5f, 2f), "city-1"),
+        THIRD(new Vector2(98f, 4f), new Vector2(90f, 2f), new Vector2(-2.5f, 2f), "city-0"),
+        FOURTH(new Vector2(134f, 2f), new Vector2(127f, 0f), new Vector2(-2.5f, 2f), "city-1"),
         ;
 
         public final Vector2 center;
         public final Vector2 position;
+        public final Vector2 shieldPosition;
         public final String image;
 
-        CitySetup(Vector2 center, Vector2 position, String image) {
+        CitySetup(Vector2 center, Vector2 position, Vector2 shieldPosition, String image) {
             this.center = center;
             this.position = position;
+            this.shieldPosition = shieldPosition;
             this.image = image;
         }
     }
