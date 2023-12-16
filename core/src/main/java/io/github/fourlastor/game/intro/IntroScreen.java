@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.github.tommyettinger.textra.Font;
@@ -30,7 +31,7 @@ import javax.inject.Inject;
 
 public class IntroScreen extends ScreenAdapter {
 
-    public static Color CLEAR_COLOR = new Color(0x333333ff);
+    public static Color CLEAR_COLOR = new Color(0.071f, 0.024f, 0.071f, 1f);
 
     private final InputMultiplexer inputMultiplexer;
     private final Stage stage;
@@ -90,7 +91,7 @@ public class IntroScreen extends ScreenAdapter {
 
         @Override
         public boolean keyDown(int keycode) {
-            transitionToLevelScreen();
+//            transitionToLevelScreen();
             if (keycode == Input.Keys.Q) Gdx.app.exit();
             return super.keyDown(keycode);
         }
@@ -118,8 +119,7 @@ public class IntroScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.071f, 0.024f, 0.071f, 1f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        ScreenUtils.clear(CLEAR_COLOR, true);
 
         stage.act(delta);
         stage.draw();
@@ -172,7 +172,7 @@ public class IntroScreen extends ScreenAdapter {
 
     private void startAnimation() {
         float durationOffset = 5f;
-        float offset = 30f;
+        float offset = 27f;
         float delay = 5f;
         ground.get(0)
                 .addAction(Actions.sequence(
