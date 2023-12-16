@@ -39,6 +39,8 @@ public class AssetsModule {
 
         assetManager.load("fonts/play-16.fnt", BitmapFont.class);
 
+        assetManager.load("audio/sounds/voice/intro voice over.mp3", Sound.class);
+
         assetManager.load("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
         assetManager.load("audio/music/612631__szegvari__techno-retro-trance-sample-short-cinematic-120bpm-music-surround.ogg", Music.class);
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -51,6 +52,7 @@ public class IntroScreen extends ScreenAdapter {
     private TypingLabel label;
 
     private Music introMusic;
+    private Sound voiceOver;
 
     @Inject
     public IntroScreen(
@@ -69,7 +71,10 @@ public class IntroScreen extends ScreenAdapter {
         stage = new Stage(viewport);
 
         introMusic = assetManager.get("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
-        soundController.play(introMusic, 1f, false);
+        // soundController.play(introMusic, 1f, false);
+
+        voiceOver = assetManager.get("audio/sounds/voice/intro voice over.mp3", Sound.class);
+        soundController.play(voiceOver, 1f);
     }
 
     private final InputProcessor processor = new InputAdapter() {
@@ -98,6 +103,9 @@ public class IntroScreen extends ScreenAdapter {
         setup();
         startAnimation();
 
+        introMusic.setVolume(1f);
+        introMusic.play();
+
         inputMultiplexer.addProcessor(stage);
         inputMultiplexer.addProcessor(processor);
     }
@@ -117,6 +125,8 @@ public class IntroScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(0.071f, 0.024f, 0.071f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        System.out.println(introMusic.isPlaying());
 
         stage.act(delta);
         stage.draw();
