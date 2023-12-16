@@ -22,6 +22,10 @@ public class InputStateMachine extends DefaultStateMachine<Entity, InputState> {
         update();
     }
 
+    public void onHit() {
+        currentState.onHit(owner);
+    }
+
     @AssistedFactory
     public interface Factory {
         InputStateMachine create(Entity entity, InputState initialState);

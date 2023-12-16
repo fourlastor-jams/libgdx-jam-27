@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,7 +19,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
 import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.city.CityStateMachine;
-import io.github.fourlastor.game.level.city.state.Destroyed;
+import io.github.fourlastor.game.level.city.state.CityDestroyed;
 import io.github.fourlastor.game.level.city.state.ShieldDown;
 import io.github.fourlastor.game.level.city.state.ShieldUp;
 import io.github.fourlastor.game.level.component.BulletComponent;
@@ -29,10 +28,11 @@ import io.github.fourlastor.game.level.component.EnemyComponent;
 import io.github.fourlastor.game.level.component.MovementComponent;
 import io.github.fourlastor.game.level.component.PositionComponent;
 import io.github.fourlastor.game.level.component.TargetComponent;
-import io.github.fourlastor.game.level.component.Turret;
+import io.github.fourlastor.game.level.component.TurretComponent;
 import io.github.fourlastor.game.level.input.InputStateMachine;
 import io.github.fourlastor.game.level.input.state.Aiming;
 import io.github.fourlastor.game.level.input.state.Idle;
+import io.github.fourlastor.game.level.input.state.TurretDestroyed;
 import io.github.fourlastor.harlequin.animation.FixedFrameAnimation;
 import io.github.fourlastor.harlequin.component.ActorComponent;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
@@ -51,9 +51,10 @@ public class EntitiesFactory {
     private final CityStateMachine.Factory cityStateMachineFactory;
     private final Provider<Aiming> aimingFactory;
     private final Provider<Idle> idleFactory;
+    private final Provider<TurretDestroyed> turretDestroyedFactory;
     private final Provider<ShieldUp> shieldUpFactory;
     private final Provider<ShieldDown> shieldDownFactory;
-    private final Provider<Destroyed> destroyedFactory;
+    private final Provider<CityDestroyed> destroyedFactory;
     private final TextureAtlas.AtlasRegion fireRegion;
     private final EnhancedRandom random;
     private final Vector2 ceiling;
@@ -65,9 +66,10 @@ public class EntitiesFactory {
             CityStateMachine.Factory cityStateMachineFactory,
             Provider<Aiming> aimingFactory,
             Provider<Idle> idleFactory,
+            Provider<TurretDestroyed> turretDestroyedFactory,
             Provider<ShieldUp> shieldUpFactory,
             Provider<ShieldDown> shieldDownFactory,
-            Provider<Destroyed> destroyedFactory,
+            Provider<CityDestroyed> destroyedFactory,
             EnhancedRandom random,
             Stage stage) {
         this.textureAtlas = textureAtlas;
@@ -76,6 +78,7 @@ public class EntitiesFactory {
         this.aimingFactory = aimingFactory;
         this.idleFactory = idleFactory;
         fireRegion = textureAtlas.findRegion("cannon/fire");
+        this.turretDestroyedFactory = turretDestroyedFactory;
         this.shieldUpFactory = shieldUpFactory;
         this.shieldDownFactory = shieldDownFactory;
         this.destroyedFactory = destroyedFactory;
@@ -114,11 +117,21 @@ public class EntitiesFactory {
             InputStateMachine stateMachine = inputStateMachineFactory.create(entity, null);
             Aiming aiming = aimingFactory.get();
             Idle idle = idleFactory.get();
+            TurretDestroyed destroyed = turretDestroyedFactory.get();
             stateMachine.changeState(idle);
             Vector2 fireOrigin =
-                    new Vector2(setup.towerPosition).add(setup.turretOffset).add(2, 5);
-            entity.add(new Turret(
-                    stateMachine, animatedImage, aiming, idle, maxLength, fireOrigin, setup.left, setup.right));
+                    new Vector2(setup.towerPosition).add(setup.turretOffset).add(4, 5);
+            entity.add(new TurretComponent(
+                    stateMachine,
+                    animatedImage,
+                    aiming,
+                    idle,
+                    destroyed,
+                    maxLength,
+                    fireOrigin,
+                    setup.left,
+                    setup.right));
+            entity.add(new TargetComponent(new Vector2(setup.towerPosition).add(setup.turretOffset)));
             entities.add(entity);
         }
 
@@ -147,14 +160,13 @@ public class EntitiesFactory {
             group.addActor(destroyedImage);
             group.addActor(shieldImage);
             entity.add(new ActorComponent(group, Layer.CITIES));
-            Rectangle area = new Rectangle(setup.center.x - 1, setup.center.y - 1, 5, 5);
             CityStateMachine stateMachine = cityStateMachineFactory.create(entity, null);
             ShieldUp shieldUp = shieldUpFactory.get();
             stateMachine.changeState(shieldUp);
             ShieldDown shieldDown = shieldDownFactory.get();
-            Destroyed destroyed = destroyedFactory.get();
+            CityDestroyed destroyed = destroyedFactory.get();
             entity.add(new CityComponent(
-                    area, stateMachine, shieldUp, shieldDown, destroyed, shieldImage, cityImage, destroyedImage));
+                    stateMachine, shieldUp, shieldDown, destroyed, shieldImage, cityImage, destroyedImage));
             entity.add(new TargetComponent(setup.center));
             entities.add(entity);
         }
