@@ -3,8 +3,11 @@ package io.github.fourlastor.game.level.input.state;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.msg.MessageDispatcher;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Pool;
+import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.level.Config;
 import io.github.fourlastor.game.level.component.TurretComponent;
 import io.github.fourlastor.game.level.event.Message;
@@ -18,18 +21,41 @@ public class Aiming extends InputState {
 
     private final Pool<SpawnBullet> spawnBulletPool;
 
+    private final Sound fireSound;
+    private final SoundController soundController;
+
     private float fireTimer;
+    private long soundId = -1;
 
     @Inject
-    public Aiming(Mappers mappers, MessageDispatcher messageDispatcher, Pool<SpawnBullet> spawnBulletPool) {
+    public Aiming(
+            Mappers mappers,
+            MessageDispatcher messageDispatcher,
+            Pool<SpawnBullet> spawnBulletPool,
+            AssetManager assetManager,
+            SoundController soundController) {
         super(mappers);
         this.messageDispatcher = messageDispatcher;
         this.spawnBulletPool = spawnBulletPool;
+        this.soundController = soundController;
+
+        fireSound = assetManager.get("audio/sounds/128299__xenonn__layered-gunshot-5.ogg");
     }
 
     @Override
     public void enter(Entity entity) {
+        super.enter(entity);
         fireTimer = 0f;
+        soundController.loop(fireSound, 1f, MathUtils.random(.9f, 1.1f));
+    }
+
+    @Override
+    public void exit(Entity entity) {
+        if (soundId > 0) {
+            soundController.stop(fireSound, soundId);
+            soundId = -1;
+        }
+        super.exit(entity);
     }
 
     @Override

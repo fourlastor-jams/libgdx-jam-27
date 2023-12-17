@@ -2,7 +2,6 @@ package io.github.fourlastor.game;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.MathUtils;
 import io.github.fourlastor.perceptual.Perceptual;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -25,8 +24,20 @@ public class SoundController {
         play(music, 1f, false);
     }
 
+    public void play(Sound sound, float volume, float pitch) {
+        sound.play(volume * SOUND_VOLUME, pitch, 0);
+    }
+
+    public long loop(Sound sound, float volume, float pitch) {
+        return sound.loop(Perceptual.perceptualToAmplitude(volume * SOUND_VOLUME), pitch, 0);
+    }
+
+    public void stop(Sound sound, long soundId) {
+        sound.stop(soundId);
+    }
+
     public void play(Sound sound, float volume) {
-        sound.play(volume * SOUND_VOLUME, MathUtils.random(.95f, 1.05f), 0);
+        sound.play(volume * SOUND_VOLUME);
     }
 
     public void play(Sound sound) {
