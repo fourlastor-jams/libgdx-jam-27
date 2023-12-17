@@ -3,6 +3,7 @@ package io.github.fourlastor.game.level.city.state;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.MathUtils;
 import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.level.component.CityComponent;
 import io.github.fourlastor.game.level.component.TargetComponent;
@@ -27,7 +28,7 @@ public class CityDestroyed extends CityState {
         city.destroyedImage.setVisible(true);
         city.fireEffect.setActive(true);
         entity.remove(TargetComponent.class);
-        soundController.play(explosionSound);
+        soundController.play(explosionSound, .4f, MathUtils.random(.8f, 1.2f));
     }
 
     @Override
