@@ -6,6 +6,7 @@ import io.github.fourlastor.game.level.city.CityStateMachine;
 import io.github.fourlastor.game.level.city.state.CityDestroyed;
 import io.github.fourlastor.game.level.city.state.ShieldDown;
 import io.github.fourlastor.game.level.city.state.ShieldUp;
+import io.github.fourlastor.game.level.particle.ParticleActor;
 
 public class CityComponent implements Component {
     public final CityStateMachine stateMachine;
@@ -15,6 +16,7 @@ public class CityComponent implements Component {
     public final Image shieldImage;
     public final Image cityImage;
     public final Image destroyedImage;
+    public final ParticleActor fireEffect;
 
     public CityComponent(
             CityStateMachine stateMachine,
@@ -23,7 +25,8 @@ public class CityComponent implements Component {
             CityDestroyed destroyed,
             Image shieldImage,
             Image cityImage,
-            Image destroyedImage) {
+            Image destroyedImage,
+            ParticleActor fireEffect) {
         this.stateMachine = stateMachine;
         this.shieldUp = shieldUp;
         this.shieldDown = shieldDown;
@@ -31,5 +34,6 @@ public class CityComponent implements Component {
         this.shieldImage = shieldImage;
         this.cityImage = cityImage;
         this.destroyedImage = destroyedImage;
+        this.fireEffect = fireEffect;
     }
 }

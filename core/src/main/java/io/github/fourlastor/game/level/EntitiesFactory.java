@@ -205,6 +205,13 @@ public class EntitiesFactory {
             group.addActor(cityImage);
             group.addActor(destroyedImage);
             group.addActor(shieldImage);
+
+            ParticleEffect fireEffect = new ParticleEffect(assetManager.get(AssetsModule.EFFECTS_GROUND_FIRE_WIDE));
+            fireEffect.scaleEffect(1f / 12f, 1f / 8f);
+            ParticleActor fireEffectActor = new ParticleActor(fireEffect);
+            fireEffectActor.setPosition(setup.fireEffectOffset.x, setup.fireEffectOffset.y);
+            fireEffectActor.setActive(false);
+            group.addActor(fireEffectActor);
             entity.add(new ActorComponent(group, Layer.CITIES));
             CityStateMachine stateMachine = cityStateMachineFactory.create(entity, null);
             ShieldUp shieldUp = shieldUpFactory.get();
@@ -212,7 +219,14 @@ public class EntitiesFactory {
             ShieldDown shieldDown = shieldDownFactory.get();
             CityDestroyed destroyed = destroyedFactory.get();
             entity.add(new CityComponent(
-                    stateMachine, shieldUp, shieldDown, destroyed, shieldImage, cityImage, destroyedImage));
+                    stateMachine,
+                    shieldUp,
+                    shieldDown,
+                    destroyed,
+                    shieldImage,
+                    cityImage,
+                    destroyedImage,
+                    fireEffectActor));
             entity.add(new TargetComponent(setup.center, setup.minEnemyIndex, setup.maxEnemyIndex));
             entities.add(entity);
         }
@@ -289,6 +303,7 @@ public class EntitiesFactory {
                 "city-0",
                 "destroyed-0",
                 new Vector2(-5f, -5f),
+                new Vector2(8f, 0f),
                 0,
                 EnemySetup.values().length / 2),
         SECOND(
@@ -298,6 +313,7 @@ public class EntitiesFactory {
                 "city-1",
                 "destroyed-1",
                 new Vector2(-5f, -5f),
+                new Vector2(8f, 0f),
                 0,
                 EnemySetup.values().length),
         THIRD(
@@ -307,6 +323,7 @@ public class EntitiesFactory {
                 "city-0",
                 "destroyed-2",
                 new Vector2(-5f, -5f),
+                new Vector2(8f, 0f),
                 0,
                 EnemySetup.values().length),
         FOURTH(
@@ -316,6 +333,7 @@ public class EntitiesFactory {
                 "city-1",
                 "destroyed-0",
                 new Vector2(-5f, -5f),
+                new Vector2(8f, 0f),
                 EnemySetup.values().length / 2,
                 EnemySetup.values().length),
         ;
@@ -326,6 +344,7 @@ public class EntitiesFactory {
         public final String image;
         public final String destroyedImage;
         public final Vector2 destroyedPosition;
+        public final Vector2 fireEffectOffset;
         public final int minEnemyIndex;
         public final int maxEnemyIndex;
 
@@ -336,6 +355,7 @@ public class EntitiesFactory {
                 String image,
                 String destroyedImage,
                 Vector2 destroyedPosition,
+                Vector2 fireEffectOffset,
                 int minEnemyIndex,
                 int maxEnemyIndex) {
             this.center = center;
@@ -344,6 +364,7 @@ public class EntitiesFactory {
             this.image = image;
             this.destroyedImage = destroyedImage;
             this.destroyedPosition = destroyedPosition;
+            this.fireEffectOffset = fireEffectOffset;
             this.minEnemyIndex = minEnemyIndex;
             this.maxEnemyIndex = maxEnemyIndex;
         }
