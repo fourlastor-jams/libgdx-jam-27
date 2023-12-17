@@ -59,6 +59,7 @@ public class LevelScreen extends ScreenAdapter {
                 } else {
                     music.play();
                 }
+                return true;
             }
             return super.keyDown(keycode);
         }
