@@ -9,12 +9,12 @@ public interface Config {
     }
 
     interface Turret {
-        float AIM_SPEED = 30f;
-        float SHOOT_INTERVAL = 0.2f;
+        float AIM_SPEED = 90f;
+        float SHOOT_INTERVAL = 0.15f;
     }
 
     interface Bullet {
 
-        float SPEED = 5f;
+        float SPEED = 7f;
     }
 }
