@@ -1,7 +1,6 @@
 package io.github.fourlastor.game.intro;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
@@ -91,8 +90,7 @@ public class IntroScreen extends ScreenAdapter {
 
         @Override
         public boolean keyDown(int keycode) {
-            //            transitionToLevelScreen();
-            if (keycode == Input.Keys.Q) Gdx.app.exit();
+            transitionToLevelScreen();
             return super.keyDown(keycode);
         }
     };
