@@ -25,8 +25,12 @@ public class SoundController {
         play(music, 1f, false);
     }
 
+    public void play(Sound sound, float volume, float pitch) {
+        sound.play(volume * SOUND_VOLUME, pitch, 0);
+    }
+
     public void play(Sound sound, float volume) {
-        sound.play(volume * SOUND_VOLUME, MathUtils.random(.95f, 1.05f), 0);
+        sound.play(volume * SOUND_VOLUME);
     }
 
     public void play(Sound sound) {

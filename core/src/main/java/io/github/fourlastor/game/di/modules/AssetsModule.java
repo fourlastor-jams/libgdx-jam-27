@@ -38,6 +38,8 @@ public class AssetsModule {
         assetManager.load("fonts/play-16.fnt", BitmapFont.class);
 
         assetManager.load("audio/sounds/voice/intro voice over new.mp3", Sound.class);
+        assetManager.load("audio/sounds/voice/qu voice.mp3", Sound.class);
+        assetManager.load("audio/sounds/128299__xenonn__layered-gunshot-5.ogg", Sound.class);
 
         assetManager.load("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
         assetManager.load(
