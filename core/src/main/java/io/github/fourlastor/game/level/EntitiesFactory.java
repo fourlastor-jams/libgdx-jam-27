@@ -346,13 +346,13 @@ public class EntitiesFactory {
         AnimatedImage animatedImage = new AnimatedImage(animation);
         animatedImage.setPosition(stage.getWidth() / 2f, 0f, Align.center | Align.top);
         animatedImage.addAction(Actions.sequence(
-                Actions.moveToAligned(stage.getWidth() / 2f, stage.getHeight() / 2f, Align.center, 2f),
+                Actions.moveToAligned(stage.getWidth() / 2f, stage.getHeight() / 2f, Align.center, 4f),
                 Actions.run(() -> soundController.play(quVoice)),
                 Actions.forever(Actions.sequence(
-                        Actions.moveBy(-30, -40, 2),
-                        Actions.moveBy(15, 40, 2),
-                        Actions.moveBy(45, -10, 2),
-                        Actions.moveBy(-30, +10, 2)))));
+                        Actions.moveBy(-30, -40, 7, Interpolation.smooth),
+                        Actions.moveBy(15, 40, 7, Interpolation.smooth),
+                        Actions.moveBy(45, -10, 7, Interpolation.smooth),
+                        Actions.moveBy(-30, +10, 7, Interpolation.smooth)))));
         entity.add(new ActorComponent(animatedImage, Layer.QU));
         return entity;
     }
