@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
-
 import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.level.component.TargetComponent;
 import io.github.fourlastor.game.level.component.TurretComponent;
