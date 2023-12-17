@@ -25,6 +25,7 @@ public class LevelScreen extends ScreenAdapter {
     private final InputMultiplexer inputMultiplexer;
 
     private final Music music;
+    private final Music quVoice;
 
     @Inject
     public LevelScreen(
@@ -43,6 +44,7 @@ public class LevelScreen extends ScreenAdapter {
         this.inputMultiplexer = inputMultiplexer;
         music = assetManager.get(
                 "audio/music/612631__szegvari__techno-retro-trance-sample-short-cinematic-120bpm-music-surround.ogg");
+        quVoice = assetManager.get("audio/sounds/voice/qu voice.mp3");
     }
 
     private final InputProcessor processor = new InputAdapter() {
@@ -104,6 +106,7 @@ public class LevelScreen extends ScreenAdapter {
     @Override
     public void hide() {
         music.stop();
+        quVoice.stop();
         engine.removeAllEntities();
         engine.removeAllSystems();
         inputMultiplexer.removeProcessor(processor);
