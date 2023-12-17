@@ -1,7 +1,9 @@
 package io.github.fourlastor.game.level;
 
 public enum Layer {
-    BACKGROUND,
+    SPACE,
+    QU,
+    GROUND,
     TURRETS,
     CITIES,
     BULLETS,
