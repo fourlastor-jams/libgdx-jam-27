@@ -31,6 +31,7 @@ public class SoundController {
     public long loop(Sound sound, float volume, float pitch) {
         return sound.loop(Perceptual.perceptualToAmplitude(volume * SOUND_VOLUME), pitch, 0);
     }
+
     public void stop(Sound sound, long soundId) {
         sound.stop(soundId);
     }
