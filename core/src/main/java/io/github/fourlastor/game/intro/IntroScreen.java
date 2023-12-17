@@ -8,7 +8,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -50,7 +49,7 @@ public class IntroScreen extends ScreenAdapter {
     private TypingLabel label;
 
     private Music introMusic;
-    private Sound voiceOver;
+    private Music voiceOver;
 
     private SoundController soundController;
     private Image darknessImage;
@@ -74,8 +73,8 @@ public class IntroScreen extends ScreenAdapter {
         introMusic = assetManager.get("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
         soundController.play(introMusic, .75f, false);
 
-        voiceOver = assetManager.get("audio/sounds/voice/intro voice over new.mp3", Sound.class);
-        soundController.play(voiceOver, 1f);
+        voiceOver = assetManager.get("audio/sounds/voice/intro voice over new.mp3");
+        soundController.play(voiceOver);
     }
 
     private final InputProcessor processor = new InputAdapter() {
