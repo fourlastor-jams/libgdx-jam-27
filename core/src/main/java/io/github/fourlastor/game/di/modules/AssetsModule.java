@@ -58,7 +58,7 @@ public class AssetsModule {
         assetManager.load("audio/sounds/514851__matrixxx__armor-01.wav", Sound.class);
         assetManager.load("audio/sounds/523745__matrixxx__armor-02.wav", Sound.class);
         assetManager.load("audio/sounds/voice/intro voice over new.mp3", Music.class);
-        assetManager.load("audio/sounds/voice/qu voice.mp3", Sound.class);
+        assetManager.load("audio/sounds/voice/qu voice.mp3", Music.class);
         assetManager.load("audio/sounds/128299__xenonn__layered-gunshot-5.ogg", Sound.class);
         assetManager.load("audio/sounds/399303__deleted_user_5405837__explosion_012.ogg", Sound.class);
         assetManager.load(

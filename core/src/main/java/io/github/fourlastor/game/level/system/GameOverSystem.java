@@ -19,7 +19,9 @@ public class GameOverSystem extends EntitySystem implements Telegraph {
     private final MessageDispatcher messageDispatcher;
     private final EntitiesFactory entitiesFactory;
     private ImmutableArray<Entity> targetEntities;
-    private boolean checkForEntities = false;
+    private boolean checkForEntities = true;
+    private boolean quSpawned = false;
+    private boolean gameOverShown = false;
 
     @Inject
     public GameOverSystem(MessageDispatcher messageDispatcher, EntitiesFactory entitiesFactory) {
@@ -31,7 +33,12 @@ public class GameOverSystem extends EntitySystem implements Telegraph {
     public void update(float deltaTime) {
         super.update(deltaTime);
         if (checkForEntities) {
-            if (targetEntities.size() == 0) {
+            if (targetEntities.size() <= 2 && !quSpawned) {
+                quSpawned = true;
+                getEngine().addEntity(entitiesFactory.qu());
+            }
+            if (targetEntities.size() == 0 && !gameOverShown) {
+                gameOverShown = true;
                 getEngine().addEntity(entitiesFactory.gameOver());
             }
             checkForEntities = false;

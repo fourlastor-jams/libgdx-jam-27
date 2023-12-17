@@ -3,6 +3,7 @@ package io.github.fourlastor.game.level;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -45,6 +46,7 @@ import io.github.fourlastor.game.level.input.state.Aiming;
 import io.github.fourlastor.game.level.input.state.Idle;
 import io.github.fourlastor.game.level.input.state.TurretDestroyed;
 import io.github.fourlastor.game.level.particle.ParticleActor;
+import io.github.fourlastor.harlequin.animation.Animation;
 import io.github.fourlastor.harlequin.animation.FixedFrameAnimation;
 import io.github.fourlastor.harlequin.component.ActorComponent;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
@@ -329,6 +331,29 @@ public class EntitiesFactory {
         gameOver.addAction(Actions.moveToAligned(stage.getWidth() / 2f, stage.getHeight() / 2f, Align.center, 2f));
         entity.add(new ActorComponent(gameOver, Layer.UI));
 
+        return entity;
+    }
+
+    public Entity qu() {
+        Entity entity = new Entity();
+        Array<TextureAtlas.AtlasRegion> images = textureAtlas.findRegions("enemies/qu");
+        Array<Drawable> drawables = new Array<>(images.size);
+        for (TextureAtlas.AtlasRegion image : images) {
+            drawables.add(new TextureRegionDrawable(image));
+        }
+        Music quVoice = assetManager.get("audio/sounds/voice/qu voice.mp3");
+        FixedFrameAnimation<Drawable> animation = new FixedFrameAnimation<>(0.3f, drawables, Animation.PlayMode.LOOP);
+        AnimatedImage animatedImage = new AnimatedImage(animation);
+        animatedImage.setPosition(stage.getWidth() / 2f, 0f, Align.center | Align.top);
+        animatedImage.addAction(Actions.sequence(
+                Actions.moveToAligned(stage.getWidth() / 2f, stage.getHeight() / 2f, Align.center, 2f),
+                Actions.run(() -> soundController.play(quVoice)),
+                Actions.forever(Actions.sequence(
+                        Actions.moveBy(-30, -40, 2),
+                        Actions.moveBy(15, 40, 2),
+                        Actions.moveBy(45, -10, 2),
+                        Actions.moveBy(-30, +10, 2)))));
+        entity.add(new ActorComponent(animatedImage, Layer.QU));
         return entity;
     }
 
