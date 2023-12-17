@@ -2,6 +2,7 @@ package io.github.fourlastor.game.level;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -77,6 +78,9 @@ public class LevelScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         engine.update(delta);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            router.goToLevel();
+        }
     }
 
     @Override
