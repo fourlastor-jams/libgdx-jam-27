@@ -6,10 +6,8 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
-import javax.inject.Inject;
-
 import io.github.fourlastor.game.SoundController;
+import javax.inject.Inject;
 
 public class LevelScreen extends ScreenAdapter {
 
@@ -18,12 +16,18 @@ public class LevelScreen extends ScreenAdapter {
     private final EntitiesFactory entitiesFactory;
 
     @Inject
-    public LevelScreen(Engine engine, Viewport viewport, EntitiesFactory entitiesFactory, SoundController soundController, AssetManager assetManager) {
+    public LevelScreen(
+            Engine engine,
+            Viewport viewport,
+            EntitiesFactory entitiesFactory,
+            SoundController soundController,
+            AssetManager assetManager) {
         this.engine = engine;
         this.viewport = viewport;
         this.entitiesFactory = entitiesFactory;
 
-        Music music = assetManager.get("audio/music/612631__szegvari__techno-retro-trance-sample-short-cinematic-120bpm-music-surround.ogg");
+        Music music = assetManager.get(
+                "audio/music/612631__szegvari__techno-retro-trance-sample-short-cinematic-120bpm-music-surround.ogg");
         soundController.play(music, 1f, true);
     }
 
