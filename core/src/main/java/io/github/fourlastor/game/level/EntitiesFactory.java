@@ -20,7 +20,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
-
 import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.city.CityStateMachine;
@@ -175,8 +174,7 @@ public class EntitiesFactory {
                     Actions.run(() -> {
                         soundController.play(shieldUpSound);
                     }),
-                    Actions.scaleTo(1f, 1f, 0.6f, Interpolation.exp10))
-            );
+                    Actions.scaleTo(1f, 1f, 0.6f, Interpolation.exp10)));
             shieldImage.setPosition(setup.shieldPosition.x, setup.shieldPosition.y);
             group.setPosition(setup.position.x, setup.position.y);
             group.addActor(cityImage);

@@ -3,7 +3,6 @@ package io.github.fourlastor.game.level.city.state;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
-
 import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.level.component.TargetComponent;
 import javax.inject.Inject;

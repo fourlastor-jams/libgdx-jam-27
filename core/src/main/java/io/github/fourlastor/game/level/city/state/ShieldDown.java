@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-
 import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.level.component.CityComponent;
 import javax.inject.Inject;
