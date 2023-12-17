@@ -3,6 +3,8 @@ package io.github.fourlastor.game.level.input.state;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.MathUtils;
+
 import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.level.component.TargetComponent;
 import io.github.fourlastor.game.level.component.TurretComponent;
@@ -28,7 +30,7 @@ public class TurretDestroyed extends InputState {
         turret.towerImage.setVisible(false);
         turret.destroyedImage.setVisible(true);
 
-        soundController.play(explosionSound);
+        soundController.play(explosionSound, .4f, MathUtils.random(.8f, 1.2f));
     }
 
     @Override
