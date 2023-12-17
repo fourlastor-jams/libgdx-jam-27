@@ -37,7 +37,7 @@ public class SoundController {
     }
 
     public void play(Sound sound, float volume) {
-        sound.play(volume * SOUND_VOLUME);
+        sound.play(Perceptual.perceptualToAmplitude(volume * SOUND_VOLUME));
     }
 
     public void play(Sound sound) {

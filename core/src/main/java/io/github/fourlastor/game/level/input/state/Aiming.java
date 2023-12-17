@@ -46,7 +46,7 @@ public class Aiming extends InputState {
     public void enter(Entity entity) {
         super.enter(entity);
         fireTimer = 0f;
-        soundController.loop(fireSound, 1f, MathUtils.random(.9f, 1.1f));
+        soundId = soundController.loop(fireSound, 1f, MathUtils.random(.9f, 1.1f));
     }
 
     @Override
