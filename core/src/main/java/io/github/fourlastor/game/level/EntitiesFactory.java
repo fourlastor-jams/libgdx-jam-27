@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -55,6 +57,7 @@ public class EntitiesFactory {
 
     private final AssetManager assetManager;
     private final TextureAtlas textureAtlas;
+    private final Stage stage;
     private final InputStateMachine.Factory inputStateMachineFactory;
     private final CityStateMachine.Factory cityStateMachineFactory;
     private final Provider<Aiming> aimingFactory;
@@ -72,6 +75,7 @@ public class EntitiesFactory {
     @Inject
     public EntitiesFactory(
             AssetManager assetManager,
+            Stage stage1,
             TextureAtlas textureAtlas,
             InputStateMachine.Factory inputStateMachineFactory,
             CityStateMachine.Factory cityStateMachineFactory,
@@ -85,6 +89,7 @@ public class EntitiesFactory {
             Stage stage,
             SoundController soundController) {
         this.assetManager = assetManager;
+        this.stage = stage1;
         this.textureAtlas = textureAtlas;
         this.inputStateMachineFactory = inputStateMachineFactory;
         this.cityStateMachineFactory = cityStateMachineFactory;
@@ -292,6 +297,19 @@ public class EntitiesFactory {
         darknessImage.addAction(
                 Actions.sequence(Actions.fadeOut(0.5f), Actions.run(() -> darknessImage.setVisible(false))));
         entity.add(new ActorComponent(darknessImage, Layer.FADE));
+        return entity;
+    }
+
+    public Entity gameOver() {
+        Entity entity = new Entity();
+        BitmapFont font = assetManager.get("fonts/play-16.fnt");
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = font;
+        Label gameOver = new Label("Game Over", style);
+        gameOver.setPosition(stage.getWidth() / 2f, -gameOver.getHeight(), Align.center);
+        gameOver.addAction(Actions.moveToAligned(stage.getWidth() / 2f, stage.getHeight() / 2f, Align.center, 2f));
+        entity.add(new ActorComponent(gameOver, Layer.GAME_OVER));
+
         return entity;
     }
 
