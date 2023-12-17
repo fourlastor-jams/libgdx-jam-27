@@ -8,7 +8,8 @@ import io.github.fourlastor.game.level.component.CityComponent;
 import io.github.fourlastor.game.level.component.EnemyComponent;
 import io.github.fourlastor.game.level.component.MovementComponent;
 import io.github.fourlastor.game.level.component.PositionComponent;
-import io.github.fourlastor.game.level.component.Turret;
+import io.github.fourlastor.game.level.component.TargetComponent;
+import io.github.fourlastor.game.level.component.TurretComponent;
 import io.github.fourlastor.harlequin.component.ActorComponent;
 
 @Module
@@ -22,8 +23,8 @@ public class EcsModule {
 
     @Provides
     @ScreenScoped
-    public ComponentMapper<Turret> turretComponent() {
-        return ComponentMapper.getFor(Turret.class);
+    public ComponentMapper<TurretComponent> turretComponent() {
+        return ComponentMapper.getFor(TurretComponent.class);
     }
 
     @Provides
@@ -48,5 +49,11 @@ public class EcsModule {
     @ScreenScoped
     public ComponentMapper<EnemyComponent> enemyComponent() {
         return ComponentMapper.getFor(EnemyComponent.class);
+    }
+
+    @Provides
+    @ScreenScoped
+    public ComponentMapper<TargetComponent> targetComponent() {
+        return ComponentMapper.getFor(TargetComponent.class);
     }
 }

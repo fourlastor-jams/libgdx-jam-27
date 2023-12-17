@@ -12,8 +12,10 @@ public class DesktopLauncher {
         Lwjgl3ApplicationConfiguration.getDisplayMode();
         long monitor = GLFW.glfwGetMonitors().get(0);
         float[] scaleX = new float[1];
+        scaleX[0] = 1.7f;
         float[] scaleY = new float[1];
-        GLFW.glfwGetMonitorContentScale(monitor, scaleX, scaleY);
+        scaleY[0] = scaleX[0];
+        // GLFW.glfwGetMonitorContentScale(monitor, scaleX, scaleY);
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         config.setForegroundFPS(60);
         config.setTitle("Chain Gun Command");
@@ -24,7 +26,7 @@ public class DesktopLauncher {
 
     private static void setWindowedMode(Lwjgl3ApplicationConfiguration config, float scaleX, float scaleY) {
         int width = (int) (720 * scaleX);
-        int height = (int) (450 * scaleY);
+        int height = (int) (405 * scaleY);
         config.setWindowedMode(width, height);
     }
 }
