@@ -14,7 +14,15 @@ public class Idle extends InputState {
     @Override
     public void update(Entity entity) {
         TurretComponent turret = turret(entity);
-        if (Gdx.input.isKeyPressed(turret.left) || Gdx.input.isKeyPressed(turret.right)) {
+        int aimDirection = 0;
+
+        if (Gdx.input.isKeyPressed(turret.left)) {
+            aimDirection -= 1;
+        }
+        if (Gdx.input.isKeyPressed(turret.right)) {
+            aimDirection += 1;
+        }
+        if (aimDirection != 0) {
             turret.stateMachine.changeState(turret.aiming);
         }
     }
