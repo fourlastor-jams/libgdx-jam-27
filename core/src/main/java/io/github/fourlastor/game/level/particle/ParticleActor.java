@@ -11,7 +11,6 @@ public class ParticleActor extends Actor {
 
     public ParticleActor(ParticleEffect effect) {
         super();
-        System.out.println("ACTOR!!!!");
         this.effect = effect;
     }
 
