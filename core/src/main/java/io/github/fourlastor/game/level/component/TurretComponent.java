@@ -20,6 +20,7 @@ public class TurretComponent implements Component {
     public final Image towerImage;
     public final Image destroyedImage;
     public final ParticleActor casings;
+    public final ParticleActor fireEffect;
     public final Aiming aiming;
     public final Idle idle;
     public final TurretDestroyed destroyed;
@@ -38,6 +39,7 @@ public class TurretComponent implements Component {
             Image towerImage,
             Image destroyedImage,
             ParticleActor casings,
+            ParticleActor fireEffect,
             Aiming aiming,
             Idle idle,
             TurretDestroyed destroyed,
@@ -50,6 +52,7 @@ public class TurretComponent implements Component {
         this.towerImage = towerImage;
         this.destroyedImage = destroyedImage;
         this.casings = casings;
+        this.fireEffect = fireEffect;
         this.aiming = aiming;
         this.idle = idle;
         this.destroyed = destroyed;

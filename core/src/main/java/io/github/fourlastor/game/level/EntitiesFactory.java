@@ -134,11 +134,17 @@ public class EntitiesFactory {
             animatedImage.setPlaying(false);
             actor.addActor(animatedImage);
             ParticleEffect casings = new ParticleEffect(assetManager.get(AssetsModule.EFFECTS_CASINGS));
-            casings.scaleEffect(1f / 32f);
+            casings.scaleEffect(1f / 32f, 1f / 4f);
             ParticleActor casingsActor = new ParticleActor(casings);
             casingsActor.setPosition(setup.casingsOffset.x, setup.casingsOffset.y);
             casingsActor.setActive(false);
             actor.addActor(casingsActor);
+            ParticleEffect fireEffect = new ParticleEffect(assetManager.get(AssetsModule.EFFECTS_GROUND_FIRE_NARROW));
+            fireEffect.scaleEffect(1f / 12f, 1f / 8f);
+            ParticleActor fireEffectActor = new ParticleActor(fireEffect);
+            fireEffectActor.setPosition(setup.fireEffectOffset.x, setup.fireEffectOffset.y);
+            fireEffectActor.setActive(false);
+            actor.addActor(fireEffectActor);
             //            Image white = new Image(textureAtlas.findRegion("whitePixel"));
             //            white.setPosition(setup.casingsOffset.x, setup.casingsOffset.y);
             //            actor.addActor(white);
@@ -156,6 +162,7 @@ public class EntitiesFactory {
                     towerImage,
                     destroyedImage,
                     casingsActor,
+                    fireEffectActor,
                     aiming,
                     idle,
                     destroyed,
@@ -353,7 +360,8 @@ public class EntitiesFactory {
                 new Vector2(15f, 3f),
                 0,
                 EnemySetup.values().length / 2,
-                new Vector2(19f, 12f)),
+                new Vector2(19f, 12f),
+                new Vector2(19f, 2f)),
         CENTER_LEFT(
                 Input.Keys.D,
                 Input.Keys.F,
@@ -364,7 +372,8 @@ public class EntitiesFactory {
                 new Vector2(15f, 3f),
                 0,
                 EnemySetup.values().length,
-                new Vector2(19f, 12f)),
+                new Vector2(19f, 12f),
+                new Vector2(19f, 2f)),
         CENTER_RIGHT(
                 Input.Keys.G,
                 Input.Keys.H,
@@ -375,7 +384,8 @@ public class EntitiesFactory {
                 new Vector2(10f, 6f),
                 0,
                 EnemySetup.values().length,
-                new Vector2(14f, 14f)),
+                new Vector2(14f, 14f),
+                new Vector2(14f, 6f)),
         RIGHT(
                 Input.Keys.J,
                 Input.Keys.K,
@@ -386,7 +396,8 @@ public class EntitiesFactory {
                 new Vector2(8f, 7f),
                 EnemySetup.values().length / 2,
                 EnemySetup.values().length,
-                new Vector2(12f, 16f)),
+                new Vector2(12f, 16f),
+                new Vector2(12f, 7f)),
         ;
         public final int left;
         public final int right;
@@ -398,6 +409,7 @@ public class EntitiesFactory {
         public final int minEnemyIndex;
         public final int maxEnemyIndex;
         public final Vector2 casingsOffset;
+        public final Vector2 fireEffectOffset;
 
         TurretSetup(
                 int left,
@@ -409,7 +421,8 @@ public class EntitiesFactory {
                 Vector2 destroyedOffset,
                 int minEnemyIndex,
                 int maxEnemyIndex,
-                Vector2 casingsOffset) {
+                Vector2 casingsOffset,
+                Vector2 fireEffectOffset) {
             this.left = left;
             this.right = right;
             this.towerPosition = towerPosition;
@@ -420,6 +433,7 @@ public class EntitiesFactory {
             this.minEnemyIndex = minEnemyIndex;
             this.maxEnemyIndex = maxEnemyIndex;
             this.casingsOffset = casingsOffset;
+            this.fireEffectOffset = fireEffectOffset;
         }
     }
 
