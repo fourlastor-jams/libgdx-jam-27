@@ -109,10 +109,15 @@ public class EntitiesFactory {
         shieldUpSound = assetManager.get("audio/sounds/514851__matrixxx__armor-01.wav");
     }
 
-    public Entity background() {
-        Entity entity = new Entity();
-        entity.add(new ActorComponent(new Image(textureAtlas.findRegion("background")), Layer.BACKGROUND));
-        return entity;
+    public List<Entity> background() {
+        ObjectList<Entity> entities = new ObjectList<>(2);
+        Entity space = new Entity();
+        space.add(new ActorComponent(new Image(textureAtlas.findRegion("space")), Layer.SPACE));
+        entities.add(space);
+        Entity ground = new Entity();
+        ground.add(new ActorComponent(new Image(textureAtlas.findRegion("ground")), Layer.GROUND));
+        entities.add(ground);
+        return entities;
     }
 
     public List<Entity> turrets() {
