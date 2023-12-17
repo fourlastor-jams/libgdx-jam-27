@@ -23,10 +23,11 @@ public class Aiming extends InputState {
 
     private final Pool<SpawnBullet> spawnBulletPool;
 
-    private float fireTimer;
+    private final Sound fireSound;
+    private final SoundController soundController;
 
-    private Sound fireSound;
-    private SoundController soundController;
+    private float fireTimer;
+    private long soundId = -1;
 
     @Inject
     public Aiming(Mappers mappers, MessageDispatcher messageDispatcher, Pool<SpawnBullet> spawnBulletPool, AssetManager assetManager, SoundController soundController) {
@@ -40,8 +41,18 @@ public class Aiming extends InputState {
 
     @Override
     public void enter(Entity entity) {
+        super.enter(entity);
         fireTimer = 0f;
-        soundController.play(fireSound, 1f, MathUtils.random(.9f, 1.1f));
+        soundController.loop(fireSound, 1f, MathUtils.random(.9f, 1.1f));
+    }
+
+    @Override
+    public void exit(Entity entity) {
+        if (soundId > 0) {
+            soundController.stop(fireSound, soundId);
+            soundId = -1;
+        }
+        super.exit(entity);
     }
 
     @Override
