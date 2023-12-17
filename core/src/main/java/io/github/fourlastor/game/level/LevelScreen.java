@@ -85,6 +85,7 @@ public class LevelScreen extends ScreenAdapter {
         for (Entity city : entitiesFactory.cities()) {
             engine.addEntity(city);
         }
+        engine.addEntity(entitiesFactory.score());
 
         inputMultiplexer.addProcessor(processor);
     }

@@ -21,6 +21,7 @@ import io.github.fourlastor.game.level.enemy.MovementSystem;
 import io.github.fourlastor.game.level.input.PlayerInputSystem;
 import io.github.fourlastor.game.level.system.ActorFollowBodySystem;
 import io.github.fourlastor.game.level.system.ClearScreenSystem;
+import io.github.fourlastor.game.level.system.ScoreSystem;
 import io.github.fourlastor.harlequin.system.StageSystem;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -41,7 +42,8 @@ public class LevelModule {
             BulletSpawnSystem bulletSpawnSystem,
             BulletRemovalSystem bulletRemovalSystem,
             CitySystem citySystem,
-            EnemySpawnSystem enemySpawnSystem) {
+            EnemySpawnSystem enemySpawnSystem,
+            ScoreSystem scoreSystem) {
         Engine engine = new Engine();
         engine.addSystem(bulletSpawnSystem);
         engine.addSystem(bulletRemovalSystem);
@@ -51,6 +53,7 @@ public class LevelModule {
         engine.addSystem(citySystem);
         engine.addSystem(playerInputSystem);
         engine.addSystem(actorFollowBodySystem);
+        engine.addSystem(scoreSystem);
         engine.addSystem(clearScreenSystem);
         engine.addSystem(stageSystem);
         return engine;

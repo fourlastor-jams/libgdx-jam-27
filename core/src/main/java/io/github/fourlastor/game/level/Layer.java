@@ -6,6 +6,6 @@ public enum Layer {
     CITIES,
     BULLETS,
     ENEMIES,
-    GAME_OVER,
+    UI,
     FADE,
 }
