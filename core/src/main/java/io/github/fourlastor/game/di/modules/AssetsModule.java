@@ -2,6 +2,7 @@ package io.github.fourlastor.game.di.modules;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -36,6 +37,10 @@ public class AssetsModule {
 
         assetManager.load("fonts/play-16.fnt", BitmapFont.class);
 
+        assetManager.load("audio/sounds/voice/intro voice over new.mp3", Sound.class);
+        assetManager.load("audio/sounds/156031__iwiploppenisse__explosion.ogg", Sound.class);
+        assetManager.load("audio/sounds/514851__matrixxx__armor-01.wav", Sound.class);
+        assetManager.load("audio/sounds/523745__matrixxx__armor-02.wav", Sound.class);
         assetManager.load("audio/sounds/voice/intro voice over new.mp3", Music.class);
 
         assetManager.load("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
