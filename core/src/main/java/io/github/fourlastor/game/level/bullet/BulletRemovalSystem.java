@@ -6,9 +6,13 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.level.component.BulletComponent;
 import io.github.fourlastor.game.level.component.EnemyComponent;
 import io.github.fourlastor.game.level.component.PositionComponent;
@@ -25,13 +29,23 @@ public class BulletRemovalSystem extends IteratingSystem {
     private final Rectangle stageArea;
     private ImmutableArray<Entity> enemyEntities;
 
+    private final Sound explosionSound;
+    private final SoundController soundController;
+
     @Inject
     public BulletRemovalSystem(
-            ComponentMapper<PositionComponent> positions, ComponentMapper<EnemyComponent> enemies, Stage stage) {
+            ComponentMapper<PositionComponent> positions,
+            ComponentMapper<EnemyComponent> enemies,
+            Stage stage,
+            SoundController soundController,
+            AssetManager assetManager) {
         super(FAMILY);
         this.positions = positions;
         this.enemies = enemies;
         this.stageArea = new Rectangle(0, 0, stage.getWidth(), stage.getHeight());
+        this.soundController = soundController;
+
+        explosionSound = assetManager.get("audio/sounds/399303__deleted_user_5405837__explosion_012.ogg");
     }
 
     @Override
@@ -61,6 +75,7 @@ public class BulletRemovalSystem extends IteratingSystem {
             float headX = enemies.get(enemy).headX;
             float dst = position.dst(enemyPosition.x + headX, enemyPosition.y);
             if (dst < 2f) {
+                soundController.play(explosionSound, .2f, MathUtils.random(.8f, 1.2f));
                 getEngine().removeEntity(entity);
                 getEngine().removeEntity(enemy);
             }
