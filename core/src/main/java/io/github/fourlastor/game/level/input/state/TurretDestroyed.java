@@ -1,14 +1,23 @@
 package io.github.fourlastor.game.level.input.state;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
+
+import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.level.component.TargetComponent;
 import io.github.fourlastor.game.level.component.TurretComponent;
 import javax.inject.Inject;
 
 public class TurretDestroyed extends InputState {
+    private final Sound explosionSound;
+    private final SoundController soundController;
+
     @Inject
-    public TurretDestroyed(Mappers mappers) {
+    public TurretDestroyed(Mappers mappers, AssetManager assetManager, SoundController soundController) {
         super(mappers);
+        this.soundController = soundController;
+        explosionSound = assetManager.get("audio/sounds/156031__iwiploppenisse__explosion.ogg");
     }
 
     @Override
@@ -19,6 +28,8 @@ public class TurretDestroyed extends InputState {
         turret.animatedImage.setVisible(false);
         turret.towerImage.setVisible(false);
         turret.destroyedImage.setVisible(true);
+
+        soundController.play(explosionSound);
     }
 
     @Override

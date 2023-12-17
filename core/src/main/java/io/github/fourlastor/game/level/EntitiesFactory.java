@@ -2,6 +2,8 @@ package io.github.fourlastor.game.level;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
@@ -18,6 +20,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
+
+import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.level.city.CityStateMachine;
 import io.github.fourlastor.game.level.city.state.CityDestroyed;
@@ -59,6 +63,8 @@ public class EntitiesFactory {
     private final TextureAtlas.AtlasRegion fireRegion;
     private final EnhancedRandom random;
     private final Vector2 ceiling;
+    private final Sound shieldUpSound;
+    private final SoundController soundController;
 
     @Inject
     public EntitiesFactory(
@@ -72,7 +78,9 @@ public class EntitiesFactory {
             Provider<ShieldDown> shieldDownFactory,
             Provider<CityDestroyed> destroyedFactory,
             EnhancedRandom random,
-            Stage stage) {
+            Stage stage,
+            SoundController soundController,
+            AssetManager assetManager) {
         this.textureAtlas = textureAtlas;
         this.inputStateMachineFactory = inputStateMachineFactory;
         this.cityStateMachineFactory = cityStateMachineFactory;
@@ -85,6 +93,9 @@ public class EntitiesFactory {
         this.destroyedFactory = destroyedFactory;
         this.random = random;
         ceiling = new Vector2(-2000, stage.getHeight());
+
+        this.soundController = soundController;
+        shieldUpSound = assetManager.get("audio/sounds/514851__matrixxx__armor-01.wav");
     }
 
     public Entity background() {
@@ -160,7 +171,12 @@ public class EntitiesFactory {
             shieldImage.setOrigin(Align.top);
             shieldImage.setScale(1f, 0f);
             shieldImage.addAction(Actions.sequence(
-                    Actions.delay(random.nextFloat(0.8f)), Actions.scaleTo(1f, 1f, 0.6f, Interpolation.exp10)));
+                    Actions.delay(random.nextFloat(0.8f)),
+                    Actions.run(() -> {
+                        soundController.play(shieldUpSound);
+                    }),
+                    Actions.scaleTo(1f, 1f, 0.6f, Interpolation.exp10))
+            );
             shieldImage.setPosition(setup.shieldPosition.x, setup.shieldPosition.y);
             group.setPosition(setup.position.x, setup.position.y);
             group.addActor(cityImage);
