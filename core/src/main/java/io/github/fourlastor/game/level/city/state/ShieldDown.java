@@ -19,7 +19,7 @@ public class ShieldDown extends CityState {
     public ShieldDown(Mappers mappers, SoundController soundController, AssetManager assetManager) {
         super(mappers);
         this.soundController = soundController;
-        sound = assetManager.get("audio/sounds/514851__matrixxx__armor-01.wav");
+        sound = assetManager.get("audio/sounds/523745__matrixxx__armor-02.wav");
     }
 
     @Override
