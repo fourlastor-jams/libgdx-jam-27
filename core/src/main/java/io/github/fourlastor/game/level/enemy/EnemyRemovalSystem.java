@@ -74,6 +74,7 @@ public class EnemyRemovalSystem extends IteratingSystem {
             if (target.area.contains(position.x + headX, position.y)) {
                 getEngine().removeEntity(entity);
                 messageDispatcher.dispatchMessage(Message.CITY_HIT.ordinal(), city);
+                messageDispatcher.dispatchMessage(Message.TARGET_HIT.ordinal());
                 return;
             }
         }
@@ -85,6 +86,7 @@ public class EnemyRemovalSystem extends IteratingSystem {
             if (target.area.contains(position.x + headX, position.y)) {
                 getEngine().removeEntity(entity);
                 messageDispatcher.dispatchMessage(Message.TURRET_HIT.ordinal(), tower);
+                messageDispatcher.dispatchMessage(Message.TARGET_HIT.ordinal());
                 return;
             }
         }

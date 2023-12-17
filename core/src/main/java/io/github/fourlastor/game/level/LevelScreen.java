@@ -2,6 +2,7 @@ package io.github.fourlastor.game.level;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
@@ -11,10 +12,13 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.fourlastor.game.SoundController;
+import io.github.fourlastor.game.route.Router;
 import javax.inject.Inject;
 
 public class LevelScreen extends ScreenAdapter {
 
+    private final SoundController soundController;
+    private final Router router;
     private final Engine engine;
     private final Viewport viewport;
     private final EntitiesFactory entitiesFactory;
@@ -28,16 +32,17 @@ public class LevelScreen extends ScreenAdapter {
             Viewport viewport,
             EntitiesFactory entitiesFactory,
             SoundController soundController,
+            Router router,
             AssetManager assetManager,
             InputMultiplexer inputMultiplexer) {
         this.engine = engine;
         this.viewport = viewport;
         this.entitiesFactory = entitiesFactory;
+        this.soundController = soundController;
+        this.router = router;
         this.inputMultiplexer = inputMultiplexer;
-
         music = assetManager.get(
                 "audio/music/612631__szegvari__techno-retro-trance-sample-short-cinematic-120bpm-music-surround.ogg");
-        soundController.play(music, 1f, true);
     }
 
     private final InputProcessor processor = new InputAdapter() {
@@ -73,6 +78,9 @@ public class LevelScreen extends ScreenAdapter {
     @Override
     public void render(float delta) {
         engine.update(delta);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            router.goToLevel();
+        }
     }
 
     @Override
@@ -85,12 +93,15 @@ public class LevelScreen extends ScreenAdapter {
         for (Entity city : entitiesFactory.cities()) {
             engine.addEntity(city);
         }
+        engine.addEntity(entitiesFactory.score());
 
         inputMultiplexer.addProcessor(processor);
+        soundController.play(music, 1f, true);
     }
 
     @Override
     public void hide() {
+        music.stop();
         engine.removeAllEntities();
         engine.removeAllSystems();
         inputMultiplexer.removeProcessor(processor);

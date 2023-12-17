@@ -1,6 +1,7 @@
 package io.github.fourlastor.game.di.modules;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -46,7 +47,10 @@ public class AssetsModule {
         assetManager.load(EFFECTS_GROUND_FIRE_NARROW, ParticleEffect.class, particleOptions);
         assetManager.load(EFFECTS_GROUND_FIRE_WIDE, ParticleEffect.class, particleOptions);
 
-        assetManager.load("fonts/play-16.fnt", BitmapFont.class);
+        BitmapFontLoader.BitmapFontParameter fontParameter = new BitmapFontLoader.BitmapFontParameter();
+        fontParameter.atlasName = PATH_TEXTURE_ATLAS;
+        assetManager.load("fonts/play-16.fnt", BitmapFont.class, fontParameter);
+        assetManager.load("fonts/quan-pixel-8.fnt", BitmapFont.class, fontParameter);
 
         assetManager.load("audio/music/241618__zagi2__dark-pulsing-intro.ogg", Music.class);
 

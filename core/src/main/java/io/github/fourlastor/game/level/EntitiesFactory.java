@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
@@ -15,12 +16,15 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
+import com.github.tommyettinger.textra.Font;
+import com.github.tommyettinger.textra.TextraLabel;
 import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.di.ScreenScoped;
 import io.github.fourlastor.game.di.modules.AssetsModule;
@@ -33,6 +37,7 @@ import io.github.fourlastor.game.level.component.CityComponent;
 import io.github.fourlastor.game.level.component.EnemyComponent;
 import io.github.fourlastor.game.level.component.MovementComponent;
 import io.github.fourlastor.game.level.component.PositionComponent;
+import io.github.fourlastor.game.level.component.ScoreComponent;
 import io.github.fourlastor.game.level.component.TargetComponent;
 import io.github.fourlastor.game.level.component.TurretComponent;
 import io.github.fourlastor.game.level.input.InputStateMachine;
@@ -55,6 +60,7 @@ public class EntitiesFactory {
 
     private final AssetManager assetManager;
     private final TextureAtlas textureAtlas;
+    private final Stage stage;
     private final InputStateMachine.Factory inputStateMachineFactory;
     private final CityStateMachine.Factory cityStateMachineFactory;
     private final Provider<Aiming> aimingFactory;
@@ -85,6 +91,7 @@ public class EntitiesFactory {
             Stage stage,
             SoundController soundController) {
         this.assetManager = assetManager;
+        this.stage = stage;
         this.textureAtlas = textureAtlas;
         this.inputStateMachineFactory = inputStateMachineFactory;
         this.cityStateMachineFactory = cityStateMachineFactory;
@@ -292,6 +299,31 @@ public class EntitiesFactory {
         darknessImage.addAction(
                 Actions.sequence(Actions.fadeOut(0.5f), Actions.run(() -> darknessImage.setVisible(false))));
         entity.add(new ActorComponent(darknessImage, Layer.FADE));
+        return entity;
+    }
+
+    public Entity score() {
+        Entity entity = new Entity();
+        BitmapFont font = assetManager.get("fonts/quan-pixel-8.fnt");
+        TextraLabel score = new TextraLabel("Score: 0", new Font(font).scale(0.7f, 0.7f));
+        score.setAlignment(Align.center);
+        score.setPosition(stage.getWidth() / 2f, stage.getHeight() - 8);
+        entity.add(new ActorComponent(score, Layer.UI));
+        entity.add(new ScoreComponent(score));
+
+        return entity;
+    }
+
+    public Entity gameOver() {
+        Entity entity = new Entity();
+        BitmapFont font = assetManager.get("fonts/play-16.fnt");
+        Label.LabelStyle style = new Label.LabelStyle();
+        style.font = font;
+        Label gameOver = new Label("Game Over", style);
+        gameOver.setPosition(stage.getWidth() / 2f, -gameOver.getHeight(), Align.center);
+        gameOver.addAction(Actions.moveToAligned(stage.getWidth() / 2f, stage.getHeight() / 2f, Align.center, 2f));
+        entity.add(new ActorComponent(gameOver, Layer.UI));
+
         return entity;
     }
 
