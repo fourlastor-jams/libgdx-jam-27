@@ -49,10 +49,12 @@ public class Aiming extends InputState {
         super.enter(entity);
         fireTimer = 0f;
         soundId = soundController.loop(fireSound, 1f, MathUtils.random(.9f, 1.1f));
+        turret(entity).casings.setActive(true);
     }
 
     @Override
     public void exit(Entity entity) {
+        turret(entity).casings.setActive(false);
         if (soundId > 0) {
             soundController.stop(fireSound, soundId);
             soundId = -1;

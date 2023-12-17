@@ -7,6 +7,7 @@ import io.github.fourlastor.game.level.input.InputStateMachine;
 import io.github.fourlastor.game.level.input.state.Aiming;
 import io.github.fourlastor.game.level.input.state.Idle;
 import io.github.fourlastor.game.level.input.state.TurretDestroyed;
+import io.github.fourlastor.game.level.particle.ParticleActor;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
 
 /**
@@ -18,6 +19,7 @@ public class TurretComponent implements Component {
     public final AnimatedImage animatedImage;
     public final Image towerImage;
     public final Image destroyedImage;
+    public final ParticleActor casings;
     public final Aiming aiming;
     public final Idle idle;
     public final TurretDestroyed destroyed;
@@ -35,6 +37,7 @@ public class TurretComponent implements Component {
             AnimatedImage animatedImage,
             Image towerImage,
             Image destroyedImage,
+            ParticleActor casings,
             Aiming aiming,
             Idle idle,
             TurretDestroyed destroyed,
@@ -46,6 +49,7 @@ public class TurretComponent implements Component {
         this.animatedImage = animatedImage;
         this.towerImage = towerImage;
         this.destroyedImage = destroyedImage;
+        this.casings = casings;
         this.aiming = aiming;
         this.idle = idle;
         this.destroyed = destroyed;
