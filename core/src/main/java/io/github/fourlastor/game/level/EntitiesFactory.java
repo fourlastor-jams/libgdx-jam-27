@@ -78,7 +78,6 @@ public class EntitiesFactory {
     @Inject
     public EntitiesFactory(
             AssetManager assetManager,
-            Stage stage1,
             TextureAtlas textureAtlas,
             InputStateMachine.Factory inputStateMachineFactory,
             CityStateMachine.Factory cityStateMachineFactory,
@@ -92,7 +91,7 @@ public class EntitiesFactory {
             Stage stage,
             SoundController soundController) {
         this.assetManager = assetManager;
-        this.stage = stage1;
+        this.stage = stage;
         this.textureAtlas = textureAtlas;
         this.inputStateMachineFactory = inputStateMachineFactory;
         this.cityStateMachineFactory = cityStateMachineFactory;
