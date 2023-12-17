@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Intersector;
@@ -22,6 +23,7 @@ import com.github.tommyettinger.ds.ObjectList;
 import com.github.tommyettinger.random.EnhancedRandom;
 import io.github.fourlastor.game.SoundController;
 import io.github.fourlastor.game.di.ScreenScoped;
+import io.github.fourlastor.game.di.modules.AssetsModule;
 import io.github.fourlastor.game.level.city.CityStateMachine;
 import io.github.fourlastor.game.level.city.state.CityDestroyed;
 import io.github.fourlastor.game.level.city.state.ShieldDown;
@@ -37,6 +39,7 @@ import io.github.fourlastor.game.level.input.InputStateMachine;
 import io.github.fourlastor.game.level.input.state.Aiming;
 import io.github.fourlastor.game.level.input.state.Idle;
 import io.github.fourlastor.game.level.input.state.TurretDestroyed;
+import io.github.fourlastor.game.level.particle.ParticleActor;
 import io.github.fourlastor.harlequin.animation.FixedFrameAnimation;
 import io.github.fourlastor.harlequin.component.ActorComponent;
 import io.github.fourlastor.harlequin.ui.AnimatedImage;
@@ -50,6 +53,7 @@ import javax.inject.Provider;
 @ScreenScoped
 public class EntitiesFactory {
 
+    private final AssetManager assetManager;
     private final TextureAtlas textureAtlas;
     private final InputStateMachine.Factory inputStateMachineFactory;
     private final CityStateMachine.Factory cityStateMachineFactory;
@@ -67,6 +71,7 @@ public class EntitiesFactory {
 
     @Inject
     public EntitiesFactory(
+            AssetManager assetManager,
             TextureAtlas textureAtlas,
             InputStateMachine.Factory inputStateMachineFactory,
             CityStateMachine.Factory cityStateMachineFactory,
@@ -78,8 +83,8 @@ public class EntitiesFactory {
             Provider<CityDestroyed> destroyedFactory,
             EnhancedRandom random,
             Stage stage,
-            SoundController soundController,
-            AssetManager assetManager) {
+            SoundController soundController) {
+        this.assetManager = assetManager;
         this.textureAtlas = textureAtlas;
         this.inputStateMachineFactory = inputStateMachineFactory;
         this.cityStateMachineFactory = cityStateMachineFactory;
@@ -128,6 +133,21 @@ public class EntitiesFactory {
             animatedImage.setProgress(maxLength / 2f);
             animatedImage.setPlaying(false);
             actor.addActor(animatedImage);
+            ParticleEffect casings = new ParticleEffect(assetManager.get(AssetsModule.EFFECTS_CASINGS));
+            casings.scaleEffect(1f / 32f, 1f / 4f);
+            ParticleActor casingsActor = new ParticleActor(casings);
+            casingsActor.setPosition(setup.casingsOffset.x, setup.casingsOffset.y);
+            casingsActor.setActive(false);
+            actor.addActor(casingsActor);
+            ParticleEffect fireEffect = new ParticleEffect(assetManager.get(AssetsModule.EFFECTS_GROUND_FIRE_NARROW));
+            fireEffect.scaleEffect(1f / 12f, 1f / 8f);
+            ParticleActor fireEffectActor = new ParticleActor(fireEffect);
+            fireEffectActor.setPosition(setup.fireEffectOffset.x, setup.fireEffectOffset.y);
+            fireEffectActor.setActive(false);
+            actor.addActor(fireEffectActor);
+            //            Image white = new Image(textureAtlas.findRegion("whitePixel"));
+            //            white.setPosition(setup.casingsOffset.x, setup.casingsOffset.y);
+            //            actor.addActor(white);
             entity.add(new ActorComponent(actor, Layer.TURRETS));
             InputStateMachine stateMachine = inputStateMachineFactory.create(entity, null);
             Aiming aiming = aimingFactory.get();
@@ -141,6 +161,8 @@ public class EntitiesFactory {
                     animatedImage,
                     towerImage,
                     destroyedImage,
+                    casingsActor,
+                    fireEffectActor,
                     aiming,
                     idle,
                     destroyed,
@@ -183,6 +205,13 @@ public class EntitiesFactory {
             group.addActor(cityImage);
             group.addActor(destroyedImage);
             group.addActor(shieldImage);
+
+            ParticleEffect fireEffect = new ParticleEffect(assetManager.get(AssetsModule.EFFECTS_GROUND_FIRE_WIDE));
+            fireEffect.scaleEffect(1f / 12f, 1f / 8f);
+            ParticleActor fireEffectActor = new ParticleActor(fireEffect);
+            fireEffectActor.setPosition(setup.fireEffectOffset.x, setup.fireEffectOffset.y);
+            fireEffectActor.setActive(false);
+            group.addActor(fireEffectActor);
             entity.add(new ActorComponent(group, Layer.CITIES));
             CityStateMachine stateMachine = cityStateMachineFactory.create(entity, null);
             ShieldUp shieldUp = shieldUpFactory.get();
@@ -190,7 +219,14 @@ public class EntitiesFactory {
             ShieldDown shieldDown = shieldDownFactory.get();
             CityDestroyed destroyed = destroyedFactory.get();
             entity.add(new CityComponent(
-                    stateMachine, shieldUp, shieldDown, destroyed, shieldImage, cityImage, destroyedImage));
+                    stateMachine,
+                    shieldUp,
+                    shieldDown,
+                    destroyed,
+                    shieldImage,
+                    cityImage,
+                    destroyedImage,
+                    fireEffectActor));
             entity.add(new TargetComponent(setup.center, setup.minEnemyIndex, setup.maxEnemyIndex));
             entities.add(entity);
         }
@@ -267,6 +303,7 @@ public class EntitiesFactory {
                 "city-0",
                 "destroyed-0",
                 new Vector2(-5f, -5f),
+                new Vector2(8f, 0f),
                 0,
                 EnemySetup.values().length / 2),
         SECOND(
@@ -276,6 +313,7 @@ public class EntitiesFactory {
                 "city-1",
                 "destroyed-1",
                 new Vector2(-5f, -5f),
+                new Vector2(8f, 0f),
                 0,
                 EnemySetup.values().length),
         THIRD(
@@ -285,6 +323,7 @@ public class EntitiesFactory {
                 "city-0",
                 "destroyed-2",
                 new Vector2(-5f, -5f),
+                new Vector2(8f, 0f),
                 0,
                 EnemySetup.values().length),
         FOURTH(
@@ -294,6 +333,7 @@ public class EntitiesFactory {
                 "city-1",
                 "destroyed-0",
                 new Vector2(-5f, -5f),
+                new Vector2(8f, 0f),
                 EnemySetup.values().length / 2,
                 EnemySetup.values().length),
         ;
@@ -304,6 +344,7 @@ public class EntitiesFactory {
         public final String image;
         public final String destroyedImage;
         public final Vector2 destroyedPosition;
+        public final Vector2 fireEffectOffset;
         public final int minEnemyIndex;
         public final int maxEnemyIndex;
 
@@ -314,6 +355,7 @@ public class EntitiesFactory {
                 String image,
                 String destroyedImage,
                 Vector2 destroyedPosition,
+                Vector2 fireEffectOffset,
                 int minEnemyIndex,
                 int maxEnemyIndex) {
             this.center = center;
@@ -322,6 +364,7 @@ public class EntitiesFactory {
             this.image = image;
             this.destroyedImage = destroyedImage;
             this.destroyedPosition = destroyedPosition;
+            this.fireEffectOffset = fireEffectOffset;
             this.minEnemyIndex = minEnemyIndex;
             this.maxEnemyIndex = maxEnemyIndex;
         }
@@ -337,7 +380,9 @@ public class EntitiesFactory {
                 "destroyed-0",
                 new Vector2(15f, 3f),
                 0,
-                EnemySetup.values().length / 2),
+                EnemySetup.values().length / 2,
+                new Vector2(19f, 12f),
+                new Vector2(19f, 2f)),
         CENTER_LEFT(
                 Input.Keys.D,
                 Input.Keys.F,
@@ -347,7 +392,9 @@ public class EntitiesFactory {
                 "destroyed-1",
                 new Vector2(15f, 3f),
                 0,
-                EnemySetup.values().length),
+                EnemySetup.values().length,
+                new Vector2(19f, 12f),
+                new Vector2(19f, 2f)),
         CENTER_RIGHT(
                 Input.Keys.G,
                 Input.Keys.H,
@@ -357,7 +404,9 @@ public class EntitiesFactory {
                 "destroyed-2",
                 new Vector2(10f, 6f),
                 0,
-                EnemySetup.values().length),
+                EnemySetup.values().length,
+                new Vector2(14f, 14f),
+                new Vector2(14f, 6f)),
         RIGHT(
                 Input.Keys.J,
                 Input.Keys.K,
@@ -367,7 +416,9 @@ public class EntitiesFactory {
                 "destroyed-0",
                 new Vector2(8f, 7f),
                 EnemySetup.values().length / 2,
-                EnemySetup.values().length),
+                EnemySetup.values().length,
+                new Vector2(12f, 16f),
+                new Vector2(12f, 7f)),
         ;
         public final int left;
         public final int right;
@@ -378,6 +429,8 @@ public class EntitiesFactory {
         public final Vector2 destroyedOffset;
         public final int minEnemyIndex;
         public final int maxEnemyIndex;
+        public final Vector2 casingsOffset;
+        public final Vector2 fireEffectOffset;
 
         TurretSetup(
                 int left,
@@ -388,7 +441,9 @@ public class EntitiesFactory {
                 String destroyedImage,
                 Vector2 destroyedOffset,
                 int minEnemyIndex,
-                int maxEnemyIndex) {
+                int maxEnemyIndex,
+                Vector2 casingsOffset,
+                Vector2 fireEffectOffset) {
             this.left = left;
             this.right = right;
             this.towerPosition = towerPosition;
@@ -398,6 +453,8 @@ public class EntitiesFactory {
             this.destroyedOffset = destroyedOffset;
             this.minEnemyIndex = minEnemyIndex;
             this.maxEnemyIndex = maxEnemyIndex;
+            this.casingsOffset = casingsOffset;
+            this.fireEffectOffset = fireEffectOffset;
         }
     }
 

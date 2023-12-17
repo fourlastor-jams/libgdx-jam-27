@@ -28,6 +28,7 @@ public class TurretDestroyed extends InputState {
         turret.animatedImage.setVisible(false);
         turret.towerImage.setVisible(false);
         turret.destroyedImage.setVisible(true);
+        turret.fireEffect.setActive(true);
 
         soundController.play(explosionSound, .4f, MathUtils.random(.8f, 1.2f));
     }
