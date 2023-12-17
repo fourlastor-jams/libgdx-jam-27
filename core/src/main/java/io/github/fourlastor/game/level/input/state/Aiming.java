@@ -17,6 +17,8 @@ import javax.inject.Inject;
 
 public class Aiming extends InputState {
 
+    private static final float MIN_ANGLE = 90 - 45f;
+    private static final float MAX_ANGLE = 90 + 45f;
     private final MessageDispatcher messageDispatcher;
 
     private final Pool<SpawnBullet> spawnBulletPool;
@@ -85,8 +87,9 @@ public class Aiming extends InputState {
         }
 
         float progressDelta = delta * direction;
-        float progress = MathUtils.clamp(animatedImage.playTime + progressDelta, 0f, turret.maxLength);
+        turret.angle = MathUtils.clamp(turret.angle - progressDelta * Config.Turret.AIM_SPEED, MIN_ANGLE, MAX_ANGLE);
+        float percent = 1f - (turret.angle - MIN_ANGLE) / MAX_ANGLE;
+        float progress = MathUtils.clamp(turret.maxLength * percent, 0f, turret.maxLength);
         animatedImage.setProgress(progress);
-        turret.angle = MathUtils.clamp(turret.angle - progressDelta * Config.Turret.AIM_SPEED, 90 - 45f, 90 + 45f);
     }
 }
